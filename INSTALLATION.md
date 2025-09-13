@@ -1,6 +1,3 @@
-## ini test sync untuk memastikan saja
-
-
 # Installation Guide
 
 ## Quick Installation Steps
@@ -8,12 +5,14 @@
 Follow these steps after cloning the repository:
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/agustra/adminLte-4-rc4-Laravel.git
 cd adminLte-4-rc4-Laravel
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 # Install PHP dependencies
 composer install
@@ -23,6 +22,7 @@ npm install
 ```
 
 ### 3. Environment Setup
+
 ```bash
 # Copy environment file
 cp .env.example .env
@@ -32,7 +32,9 @@ php artisan key:generate
 ```
 
 ### 4. Database Configuration
+
 Edit `.env` file with your database configuration:
+
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -43,6 +45,7 @@ DB_PASSWORD=your_password
 ```
 
 ### 5. Database Migration & Seeding
+
 ```bash
 # Run migrations
 php artisan migrate
@@ -55,6 +58,7 @@ php artisan passport:install
 ```
 
 ### 6. Build Assets
+
 ```bash
 # Development
 npm run dev
@@ -64,6 +68,7 @@ npm run build
 ```
 
 ### 7. Start Development Server
+
 ```bash
 # Using composer script (recommended)
 composer run dev
@@ -77,6 +82,7 @@ php artisan serve
 ### If you get any errors:
 
 1. **Clear and reinstall:**
+
 ```bash
 composer clear-cache
 rm -rf vendor composer.lock
@@ -84,6 +90,7 @@ composer install
 ```
 
 3. **If permission issues on macOS/Linux:**
+
 ```bash
 chmod -R 755 vendor
 rm -rf vendor composer.lock
@@ -93,13 +100,14 @@ composer dump-autoload
 
 ### Common Issues:
 
-- **Vite Manifest Error:** Run `npm run build`
-- **Permission Denied:** Run `chmod -R 755 storage bootstrap/cache`
-- **Database Connection:** Check `.env` configuration and ensure MySQL is running
+-   **Vite Manifest Error:** Run `npm run build`
+-   **Permission Denied:** Run `chmod -R 755 storage bootstrap/cache`
+-   **Database Connection:** Check `.env` configuration and ensure MySQL is running
 
 ## Default Login Credentials
 
 After seeding:
+
 ```
 Admin:
 Email: admin@mail.com
@@ -112,15 +120,16 @@ Password: password
 
 ## System Requirements
 
-- PHP >= 8.2
-- Composer
-- Node.js & NPM
-- MySQL/MariaDB
-- Git
+-   PHP >= 8.2
+-   Composer
+-   Node.js & NPM
+-   MySQL/MariaDB
+-   Git
 
 ## Production Deployment
 
 For production, run these additional commands:
+
 ```bash
 # Optimize application
 php artisan config:cache

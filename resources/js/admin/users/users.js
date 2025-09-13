@@ -35,9 +35,9 @@ const DEFAULT_FILTERS = {
 const generalConfig = {
     // Table & URLs
     tableId: "#table-users",
-    urlWeb: `${window.APP_CONFIG?.baseUrl || ''}/admin/users/`,
-    urlApi: `${window.APP_CONFIG?.apiUrl || '/api'}/users`,
-    deleteMultipleUrl: `${window.APP_CONFIG?.apiUrl || '/api'}/users/multiple/delete`,
+    urlWeb: "/admin/users",
+    urlApi: "/api/users",
+    deleteMultipleUrl: "/api/users/multiple/delete",
 
     // Table Configuration
     tableName: "users",
