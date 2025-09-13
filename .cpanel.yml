@@ -1,9 +1,4 @@
 ---
 deployment:
   tasks:
-    - git reset --hard HEAD
-    - git clean -fd
-    - cp .env.example .env
-    - /opt/alt/php83/usr/bin/php artisan config:clear
-    - /opt/alt/php83/usr/bin/php artisan route:clear
-    - /opt/alt/php83/usr/bin/php artisan view:clear
+    - echo "Deployment completed"
