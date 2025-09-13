@@ -1,3 +1,5 @@
+---
 deployment:
   tasks:
-    - /bin/cp -R * /home/bengkel1/subdomains/dompet.wan.bengkelhp.com/
+    - export DEPLOYPATH=/home/bengkel1/subdomains/dompet.wan.bengkelhp.com
+    - /bin/cp -R * $DEPLOYPATH
