@@ -1,11 +1,5 @@
----
 deployment:
   tasks:
     - export DEPLOYPATH=/home/bengkel1/subdomains/dompet.wan.bengkelhp.com/
     - /bin/cp -R * $DEPLOYPATH
     - /bin/cp .env.example $DEPLOYPATH/.env
-    - cd $DEPLOYPATH && composer install --no-dev --optimize-autoloader
-    - cd $DEPLOYPATH && php artisan key:generate
-    - cd $DEPLOYPATH && php artisan config:cache
-    - cd $DEPLOYPATH && php artisan route:cache
-    - cd $DEPLOYPATH && php artisan view:cache
