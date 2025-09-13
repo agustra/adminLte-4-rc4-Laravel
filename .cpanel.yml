@@ -1,5 +1,10 @@
----
 deployment:
   tasks:
+    # pindah ke direktori project
     - export DEPLOYPATH=/home/bengkel1/subdomains/dompet.wan.bengkelhp.com
-    - /bin/cp -R * $DEPLOYPATH
+    # clear cache laravel
+    - /opt/alt/php83/usr/bin/php artisan config:clear
+    - /opt/alt/php83/usr/bin/php artisan route:clear
+    - /opt/alt/php83/usr/bin/php artisan view:clear
+    # (opsional) kalau composer ada di server
+    # - /opt/alt/php83/usr/bin/php /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader
