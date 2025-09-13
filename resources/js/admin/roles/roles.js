@@ -35,9 +35,9 @@ const DEFAULT_FILTERS = {
 const generalConfig = {
     // Table & URLs
     tableId: "#table-roles",
-    urlWeb: `${window.APP_CONFIG?.baseUrl || ''}/admin/roles/`,
-    urlApi: `${window.APP_CONFIG?.apiUrl || '/api'}/roles`,
-    deleteMultipleUrl: `${window.APP_CONFIG?.apiUrl || '/api'}/roles/multiple/delete`,
+    urlWeb: "/admin/roles",
+    urlApi: "/api/roles",
+    deleteMultipleUrl: "/api/roles/multiple/delete",
 
     // Table Configuration toolbar-center
     tableName: "roles",
