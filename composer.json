@@ -1,0 +1,203 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "adminlte/adminlte-4-rc4-laravel",
+    "type": "project",
+    "description": "Modern Admin Dashboard built with Laravel 12 and AdminLTE 4 using pure Vanilla JavaScript (no jQuery). Features user management, role-based permissions, dynamic menu system, dark mode, media library, and RESTful API with Laravel Passport authentication.",
+    "keywords": [
+        "laravel",
+        "adminlte",
+        "dashboard",
+        "admin-panel",
+        "rbac",
+        "permissions",
+        "api",
+        "passport",
+        "dark-mode",
+        "media-library",
+        "bootstrap",
+        "spatie",
+        "vanilla-javascript",
+        "no-jquery",
+        "es6-modules",
+        "modern-js"
+    ],
+    "license": "MIT", 
+    "authors": [
+        {
+            "name": "Agus Syahputra",
+            "homepage": "https://github.com/agustra",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/agustra/adminLte-4-rc4-Laravel",
+    "support": {
+        "issues": "https://github.com/agustra/adminLte-4-rc4-Laravel/issues",
+        "source": "https://github.com/agustra/adminLte-4-rc4-Laravel",
+        "docs": "https://github.com/agustra/adminLte-4-rc4-Laravel/blob/main/README.md"
+    },
+    "require": {
+        "php": "^8.2|^8.3|^8.4",
+        "laravel/framework": "^12.23",
+        "laravel/passport": "^12.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^2.10.1",
+        "masbug/flysystem-google-drive-ext": "^2.4",
+        "spatie/laravel-backup": "^9.3",
+        "spatie/laravel-medialibrary": "^11.13",
+        "spatie/laravel-menu": "^4.2",
+        "spatie/laravel-permission": "^6.16"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.24",
+        "larastan/larastan": "^3.6",
+        "laravel/pail": "^1.2.2",
+        "laravel/pint": "^1.13",
+        "laravel/sail": "^1.41",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5.3",
+        "rector/rector": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        },
+        "files": [
+            "app/helpers/RouteHelper.php",
+            "app/helpers/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php artisan migrate --graceful --ansi",
+            "@php artisan db:seed --ansi",
+            "@php artisan passport:install --ansi"
+        ],
+        "setup": [
+            "@composer install",
+            "@php artisan package:discover --ansi",
+            "@php artisan key:generate --ansi",
+            "@php artisan migrate --ansi",
+            "@php artisan db:seed --ansi",
+            "@php artisan passport:install --ansi",
+            "@php artisan storage:link --ansi"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "fresh": [
+            "@php artisan migrate:fresh --seed --ansi",
+            "@php artisan passport:install --ansi"
+        ],
+        "test": [
+            "vendor/bin/phpunit"
+        ],
+        "test-coverage": [
+            "vendor/bin/phpunit --coverage-html coverage"
+        ],
+        "pint": [
+            "vendor/bin/pint"
+        ],
+        "pint-test": [
+            "vendor/bin/pint --test"
+        ],
+        "optimize": [
+            "@php artisan config:cache --ansi",
+            "@php artisan route:cache --ansi",
+            "@php artisan view:cache --ansi"
+        ],
+        "clear-all": [
+            "@php artisan optimize:clear --ansi"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan analyse"
+        ],
+        "rector": [
+            "vendor/bin/rector process"
+        ],
+        "rector-dry": [
+            "vendor/bin/rector process --dry-run"
+        ],
+        "code-quality": [
+            "@pint",
+            "@phpstan",
+            "@rector-dry"
+        ],
+        "code-fix": [
+            "@pint",
+            "@rector"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        },
+        "frontend": {
+            "javascript": "Vanilla JavaScript ES6+ modules",
+            "no-dependencies": "No jQuery or other JavaScript libraries required",
+            "css-framework": "Bootstrap 5 with native JavaScript components",
+            "build-tool": "Vite for modern asset compilation",
+            "icons": "Bootstrap Icons (primary) with FontAwesome fallback"
+        },
+        "features": {
+            "authentication": "Laravel Passport OAuth2 + Custom session auth",
+            "authorization": "Spatie Permission RBAC + Dynamic controller permissions",
+            "ui-framework": "AdminLTE 4 with Bootstrap 5",
+            "database": "MySQL with Eloquent ORM",
+            "api": "RESTful API with Laravel Passport authentication",
+            "media-handling": "Spatie MediaLibrary with WebP conversion",
+            "backup-system": "Spatie Backup with Google Drive integration",
+            "performance": "Vanilla JS for optimal performance, no jQuery bloat"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "suggest": {
+        "ext-redis": "Required for Redis cache and session driver (recommended for production)",
+        "ext-gd": "Required for image processing in media library",
+        "ext-imagick": "Alternative image processing library",
+        "ext-zip": "Required for backup functionality",
+        "pusher/pusher-php-server": "Required for real-time notifications"
+    },
+    "non-feature": {
+        "jquery": "This application does NOT use jQuery - built with pure Vanilla JavaScript",
+        "legacy-js": "No legacy JavaScript libraries - modern ES6+ modules only",
+        "heavy-frameworks": "No Vue.js, React, or Angular - lightweight vanilla approach"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/agustra"
+        }
+    ],
+    "readme": "This modern admin dashboard is built with performance in mind using Vanilla JavaScript ES6+ modules instead of jQuery. All interactive components use native JavaScript and Bootstrap 5's built-in functionality for optimal performance and smaller bundle sizes."
+}

@@ -1,0 +1,245 @@
+/**
+ * AdminLTE Laravel Application - Global Styles
+ * 
+ * This file contains centralized CSS for the entire application.
+ * Tailwind CSS has been removed in favor of AdminLTE + Bootstrap 5.
+ */
+
+/* ==========================================================================
+   BADGE SYSTEM
+   ========================================================================== */
+/**
+ * Custom badge-pill styling for status indicators, categories, and labels.
+ * Used throughout the application for consistent badge appearance.
+ * 
+ * Usage: <span class="badge-pill bg-success-light">Active</span>
+ */
+.badge-pill {
+    padding: 0.25em 0.6em; /* Comfortable padding for readability */
+    border-radius: 10rem; /* Fully rounded corners (pill shape) */
+    font-size: 0.75em; /* Slightly smaller than body text */
+    display: inline-block; /* Allows margin/padding control */
+    font-weight: 500; /* Medium weight for better visibility */
+}
+
+/* ==========================================================================
+   COLOR SYSTEM
+   ========================================================================== */
+/**
+ * Custom color palette for consistent branding across the application.
+ * Light variants provide better contrast and readability.
+ * 
+ * Usage: <div class="bg-violet">Content</div>
+ */
+.bg-violet {
+    background: #f3e5f5;
+    color: #7b1fa2;
+} /* Purple theme for special categories */
+.bg-amber {
+    background: #fff3e0;
+    color: #f57c00;
+} /* Orange theme for warnings/pending */
+.bg-success-light {
+    background: #e8f5e8;
+    color: #2e7d32;
+} /* Light green for success states */
+.bg-primary-light {
+    background: #e3f2fd;
+    color: #1976d2;
+} /* Light blue for info/primary */
+.bg-danger-light {
+    background: #ffebee;
+    color: #c62828;
+} /* Light red for errors/inactive */
+
+/* ==========================================================================
+   DARK MODE
+   ========================================================================== */
+/**
+ * Custom color 
+ */
+/* --- Dark mode --- */
+[data-bs-theme="dark"] .gradient-card {
+    background: linear-gradient(45deg, #1f2937, #111827);
+    color: #f9fafb;
+}
+
+/* ==========================================================================
+   GRID VIEW SYSTEM
+   ========================================================================== */
+/**
+ * Grid layout system for card-based displays (karyawan, products, etc.)
+ * Provides consistent spacing, hover effects, and interactive elements.
+ * 
+ * Usage: <div class="grid-view"><div class="card">...</div></div>
+ */
+
+/* Card spacing and animation */
+.grid-view .card {
+    margin-bottom: 1rem; /* Consistent vertical spacing between cards */
+    transition: transform 0.2s ease; /* Smooth hover animation */
+}
+
+/* Hover effect for better UX */
+.grid-view .card:hover {
+    transform: translateY(-2px); /* Subtle lift effect on hover */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Checkbox positioning for bulk selection */
+.grid-checkbox {
+    position: absolute; /* Positioned relative to card */
+    top: 10px; /* Distance from top edge */
+    left: 10px; /* Distance from left edge */
+    z-index: 10; /* Above card content */
+}
+
+/* Overlay for inactive/disabled items */
+.inactive-overlay::after {
+    content: ""; /* Required for pseudo-element */
+    position: absolute; /* Covers entire parent element */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; /* Full coverage */
+    background: rgba(0, 0, 0, 0.3); /* Semi-transparent dark overlay */
+    border-radius: 0.375rem; /* Matches card border radius */
+    pointer-events: none; /* Allows interaction with underlying content */
+}
+
+/* ==========================================================================
+   AVATAR SYSTEM
+   ========================================================================== */
+/**
+ * Avatar upload and display system with hover interactions.
+ * Used in user profiles, karyawan management, etc.
+ * 
+ * Usage: <div class="avatar-container"><div class="avatar-overlay">...</div></div>
+ */
+
+/* Show overlay on hover */
+.avatar-container:hover .avatar-overlay {
+    opacity: 1; /* Make overlay visible on hover */
+}
+
+/* Overlay styling */
+.avatar-overlay {
+    cursor: pointer; /* Indicates clickable element */
+}
+
+/* ==========================================================================
+   VIEW TOGGLE SYSTEM
+   ========================================================================== */
+/**
+ * Toggle buttons for switching between different view modes (grid/list).
+ * Provides visual feedback for active state.
+ * 
+ * Usage: <button class="view-toggle active" data-view="grid">Grid</button>
+ */
+.view-toggle.active {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white; /* White text for contrast */
+    border-color: #007bff; /* Matching border color */
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+/**
+ * General utility classes for special effects and layouts.
+ */
+
+/* Gradient background for special cards/headers */
+.gradient-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* ==========================================================================
+   TOMSELECT ERROR STYLING
+   ========================================================================== */
+/**
+ * Error styling for TomSelect components to show validation errors.
+ * Adds red border when validation fails.
+ */
+.ts-wrapper.is-invalid .ts-control {
+    border-color: #dc3545 !important; /* Bootstrap danger color */
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.ts-wrapper.is-invalid .ts-control:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* ==========================================================================
+   TEXTAREA ICON/EMOJI STYLING
+   ========================================================================== */
+/**
+ * Responsive icon/emoji positioning for textarea components.
+ * Matches textarea height and aligns to top for multi-row content.
+ */
+.textarea-icon-wrapper {
+    display: flex !important;
+    align-items: center !important; /* Center vertically */
+    justify-content: center !important; /* Center horizontally */
+    padding: 0.5rem !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    min-width: 2.5rem !important;
+}
+
+/* Adjust for different textarea sizes */
+.input-group-sm .textarea-icon-wrapper {
+    padding: 0.375rem !important;
+    font-size: 14px !important;
+    min-width: 2.25rem !important;
+}
+
+.input-group-lg .textarea-icon-wrapper {
+    padding: 0.75rem !important;
+    font-size: 18px !important;
+    min-width: 3rem !important;
+}
+
+/* ==========================================================================
+   TOMSELECT ICON/EMOJI STYLING
+   ========================================================================== */
+/**
+ * Responsive icon/emoji positioning for TomSelect components.
+ * Matches the height of form-select elements.
+ */
+.tomselect-icon-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 0.5rem !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    height: calc(
+        1.5em + 0.5rem + 2px
+    ) !important; /* Match form-select-sm height */
+    min-width: 2.5rem !important;
+}
+
+/* Adjust for different select sizes */
+.input-group-sm .tomselect-icon-wrapper {
+    height: calc(1.5em + 0.5rem + 2px) !important; /* Small select height */
+    font-size: 16px !important;
+    min-width: 2.25rem !important;
+}
+
+.input-group-lg .tomselect-icon-wrapper {
+    height: calc(1.5em + 1rem + 2px) !important; /* Large select height */
+    font-size: 20px !important;
+    min-width: 3rem !important;
+}
+
+/* Ensure TomSelect wrapper aligns properly */
+.input-group .ts-wrapper {
+    flex: 1 1 auto !important;
+}
+
+.input-group .ts-wrapper .ts-control {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}

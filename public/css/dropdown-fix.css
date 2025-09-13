@@ -1,0 +1,5 @@
+.btn-group .dropdown-menu {
+    position: fixed !important;
+    z-index: 9999 !important;
+    will-change: transform !important;
+}

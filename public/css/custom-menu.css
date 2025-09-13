@@ -1,0 +1,20 @@
+/* Custom Menu Styling */
+.nav-sidebar .nav-item .nav-link p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-sidebar .nav-item .nav-link p i.right {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.nav-sidebar .nav-item.menu-open .nav-link p i.right {
+    transform: rotate(-90deg);
+}
+
+.nav-sidebar .nav-item .nav-link p .menu-text {
+    flex: 1;
+}
