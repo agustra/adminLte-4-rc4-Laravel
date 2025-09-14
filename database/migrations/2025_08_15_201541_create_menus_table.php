@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->string('icon')->nullable();
             $table->string('permission')->nullable();
+            $table->json('roles')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->integer('order')->default(0);
             $table->string('is_active', 10)->default('aktif');
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->index('name'); // Untuk search by name
             $table->index('url'); // Untuk search by URL
             $table->index('permission'); // Untuk filter by permission
+            $table->index('roles'); // Untuk filter by roles
             $table->index(['is_active', 'parent_id', 'order']); // Composite index untuk sidebar query
         });
     }

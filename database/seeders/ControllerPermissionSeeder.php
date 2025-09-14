@@ -10,14 +10,14 @@ class ControllerPermissionSeeder extends Seeder
     public function run(): void
     {
         $mappings = [
-            // UsersController
-            ['controller' => 'UsersController', 'method' => 'index', 'permissions' => ['read users']],
-            ['controller' => 'UsersController', 'method' => 'create', 'permissions' => ['create users']],
-            ['controller' => 'UsersController', 'method' => 'store', 'permissions' => ['create users']],
-            ['controller' => 'UsersController', 'method' => 'show', 'permissions' => ['show users']],
-            ['controller' => 'UsersController', 'method' => 'edit', 'permissions' => ['edit users']],
-            ['controller' => 'UsersController', 'method' => 'update', 'permissions' => ['edit users']],
-            ['controller' => 'UsersController', 'method' => 'destroy', 'permissions' => ['delete users']],
+            // UserController
+            ['controller' => 'UserController', 'method' => 'index', 'permissions' => ['read users']],
+            ['controller' => 'UserController', 'method' => 'create', 'permissions' => ['create users']],
+            ['controller' => 'UserController', 'method' => 'store', 'permissions' => ['create users']],
+            ['controller' => 'UserController', 'method' => 'show', 'permissions' => ['show users']],
+            ['controller' => 'UserController', 'method' => 'edit', 'permissions' => ['edit users']],
+            ['controller' => 'UserController', 'method' => 'update', 'permissions' => ['edit users']],
+            ['controller' => 'UserController', 'method' => 'destroy', 'permissions' => ['delete users']],
 
             // UsersApiController
             ['controller' => 'UsersApiController', 'method' => 'index', 'permissions' => ['read users']],
@@ -26,14 +26,14 @@ class ControllerPermissionSeeder extends Seeder
             ['controller' => 'UsersApiController', 'method' => 'update', 'permissions' => ['edit users']],
             ['controller' => 'UsersApiController', 'method' => 'destroy', 'permissions' => ['delete users']],
 
-            // UsersController
-            ['controller' => 'RolesController', 'method' => 'index', 'permissions' => ['read roles']],
-            ['controller' => 'RolesController', 'method' => 'create', 'permissions' => ['create roles']],
-            ['controller' => 'RolesController', 'method' => 'store', 'permissions' => ['create roles']],
-            ['controller' => 'RolesController', 'method' => 'show', 'permissions' => ['show roles']],
-            ['controller' => 'RolesController', 'method' => 'edit', 'permissions' => ['edit roles']],
-            ['controller' => 'RolesController', 'method' => 'update', 'permissions' => ['edit roles']],
-            ['controller' => 'RolesController', 'method' => 'destroy', 'permissions' => ['delete roles']],
+            // RoleController
+            ['controller' => 'RoleController', 'method' => 'index', 'permissions' => ['read roles']],
+            ['controller' => 'RoleController', 'method' => 'create', 'permissions' => ['create roles']],
+            ['controller' => 'RoleController', 'method' => 'store', 'permissions' => ['create roles']],
+            ['controller' => 'RoleController', 'method' => 'show', 'permissions' => ['show roles']],
+            ['controller' => 'RoleController', 'method' => 'edit', 'permissions' => ['edit roles']],
+            ['controller' => 'RoleController', 'method' => 'update', 'permissions' => ['edit roles']],
+            ['controller' => 'RoleController', 'method' => 'destroy', 'permissions' => ['delete roles']],
 
             // RolesApiController
             ['controller' => 'RolesApiController', 'method' => 'index', 'permissions' => ['read roles']],
@@ -51,14 +51,14 @@ class ControllerPermissionSeeder extends Seeder
             ['controller' => 'ControllerPermissionController', 'method' => 'update', 'permissions' => ['edit controller-permissions']],
             ['controller' => 'ControllerPermissionController', 'method' => 'destroy', 'permissions' => ['delete controller-permissions']],
 
-            // PermissionsController
-            ['controller' => 'PermissionsController', 'method' => 'index', 'permissions' => ['read permissions']],
-            ['controller' => 'PermissionsController', 'method' => 'create', 'permissions' => ['create permissions']],
-            ['controller' => 'PermissionsController', 'method' => 'store', 'permissions' => ['create permissions']],
-            ['controller' => 'PermissionsController', 'method' => 'show', 'permissions' => ['show permissions']],
-            ['controller' => 'PermissionsController', 'method' => 'edit', 'permissions' => ['edit permissions']],
-            ['controller' => 'PermissionsController', 'method' => 'update', 'permissions' => ['edit permissions']],
-            ['controller' => 'PermissionsController', 'method' => 'destroy', 'permissions' => ['delete permissions']],
+            // PermissionController
+            ['controller' => 'PermissionController', 'method' => 'index', 'permissions' => ['read permissions']],
+            ['controller' => 'PermissionController', 'method' => 'create', 'permissions' => ['create permissions']],
+            ['controller' => 'PermissionController', 'method' => 'store', 'permissions' => ['create permissions']],
+            ['controller' => 'PermissionController', 'method' => 'show', 'permissions' => ['show permissions']],
+            ['controller' => 'PermissionController', 'method' => 'edit', 'permissions' => ['edit permissions']],
+            ['controller' => 'PermissionController', 'method' => 'update', 'permissions' => ['edit permissions']],
+            ['controller' => 'PermissionController', 'method' => 'destroy', 'permissions' => ['delete permissions']],
 
             // PermissionsApiController
             ['controller' => 'PermissionsApiController', 'method' => 'index', 'permissions' => ['read permissions']],

@@ -10,179 +10,137 @@ use Spatie\Permission\Models\Role;
 
 class Admin extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Membuat permission
-        $permissions = [
-            'menu dashboard',
-            'read dashboard',
-            'create dashboard',
-            'edit dashboard',
-            'show dashboard',
-            'delete dashboard',
+        $this->createPermissions();
+        $this->createRoles();
+        $this->assignRolePermissions();
+        $this->createUsers();
+    }
 
-            'menu users',
-            'read users',
-            'create users',
-            'edit users',
-            'show users',
-            'delete users',
-
-            'menu roles',
-            'read roles',
-            'create roles',
-            'edit roles',
-            'show roles',
-            'delete roles',
-
-            'menu permissions',
-            'read permissions',
-            'create permissions',
-            'edit permissions',
-            'show permissions',
-            'delete permissions',
-
-            'menu settings',
-            'read settings',
-            'create settings',
-            'edit settings',
-            'show settings',
-            'delete settings',
-
-            'menu menus',
-            'read menus',
-            'create menus',
-            'edit menus',
-            'show menus',
-            'delete menus',
-
-            'menu badge',
-            'read badge',
-            'create badge',
-            'edit badge',
-            'show badge',
-            'delete badge',
-
-            'menu media',
-            'read media',
-            'create media',
-            'edit media',
-            'show media',
-            'delete media',
-
-            'menu backup',
-            'read backup',
-            'create backup',
-            'edit backup',
-            'show backup',
-            'delete backup',
-
-            'filter date',
-
-            'menu controller-permissions',
-            'read controller-permissions',
-            'create controller-permissions',
-            'edit controller-permissions',
-            'show controller-permissions',
-            'delete controller-permissions',
-
-            'menu badge-configs',
-            'read badge-configs',
-            'create badge-configs',
-            'edit badge-configs',
-            'show badge-configs',
-            'delete badge-configs',
+    private function createPermissions(): void
+    {
+        $modules = [
+            'dashboard',
+            'users',
+            'roles',
+            'permissions',
+            'settings',
+            'menus',
+            'badge',
+            'media',
+            'backup',
+            'controller-permissions',
+            'badge-configs'
         ];
+
+        $actions = ['menu', 'read', 'create', 'edit', 'show', 'delete'];
+        $permissions = ['filter date'];
+
+        foreach ($modules as $module) {
+            foreach ($actions as $action) {
+                $permissions[] = "$action $module";
+            }
+        }
 
         foreach ($permissions as $permission) {
             Permission::updateOrCreate(
                 ['name' => $permission, 'guard_name' => 'web']
             );
         }
+    }
 
-        // Membuat peran
+    private function createRoles(): void
+    {
         $roles = [
-            'Admin',
-            'User',
-            'Kasir',
-            'Resepsionis',
             'Super Admin',
-            'Technician',
-            'Owner',
-            'Manager Outlet',
-            'Manager Umum',
-            'Team Inti',
-            'karyawan',
-            // 'visitor',
-            // 'author',
-            // 'manager',
+            'Admin',
+            'Manager',
+            'Editor',
+            'Author',
+            'Moderator',
+            'User',
+            'Visitor',
+            'Auditor',
+            'Guest'
         ];
 
         foreach ($roles as $role) {
             Role::updateOrCreate(['name' => $role, 'guard_name' => 'web']);
         }
+    }
 
-        // Define role permissions
+    private function assignRolePermissions(): void
+    {
         $rolePermissions = [
-            'user' => ['read users'],
-            'kasir' => [
-                'read users',
-                'create users',
-                'menu pinjaman',
-                'read pinjaman',
-                'edit pinjaman',
-            ],
-            'resepsionis' => [
-                'read users',
-                'create users',
-            ],
+            'Super Admin' => Permission::all()->pluck('name')->toArray(),
+            'Admin' => ['menu dashboard', 'read dashboard', 'menu users', 'read users', 'create users', 'edit users', 'show users', 'delete users'],
+            'Manager' => ['menu dashboard', 'read dashboard', 'menu users', 'read users', 'show users'],
+            'Editor' => ['menu dashboard', 'read dashboard', 'read users', 'edit users'],
+            'Author' => ['menu dashboard', 'read dashboard', 'read users'],
+            'Moderator' => ['read dashboard', 'read users'],
+            'User' => ['read dashboard'],
+            'Visitor' => ['read dashboard'],
+            'Auditor' => ['read dashboard', 'read users', 'read roles', 'read permissions'],
+            'Guest' => []
         ];
 
-        // Assign permissions to roles
-        $allPermissions = Permission::all();
-
-        // Admin gets all permissions
-        Role::where('name', 'admin')->first()->syncPermissions($allPermissions);
-
-        // Other roles get specific permissions
         foreach ($rolePermissions as $roleName => $permissionNames) {
-            $permissions = Permission::whereIn('name', $permissionNames)->get();
-            Role::where('name', $roleName)->first()->syncPermissions($permissions);
+            $role = Role::where('name', $roleName)->first();
+            if ($role && !empty($permissionNames)) {
+                if ($roleName === 'Super Admin') {
+                    $role->syncPermissions(Permission::all());
+                } else {
+                    $permissions = Permission::whereIn('name', $permissionNames)->get();
+                    $role->syncPermissions($permissions);
+                }
+            }
         }
+    }
 
-        // Membuat pengguna dengan role-based permissions only
-        $users = [
-            'admin' => 'admin',
-            'Owner Utama' => 'owner',
-            'kamarut' => 'karyawan',
-            'afif' => 'technician',
-            'muhajir' => 'karyawan',
-            'akbar' => 'karyawan',
-            'Manager Umum' => 'Manager Umum',
-            'Kasir Utama' => 'kasir',
-            'Karyawan Teknisi' => 'karyawan',
-            'kasir' => 'kasir',
-            'resepsionis' => 'resepsionis',
+    private function createUsers(): void
+    {
+        // Create admin users
+        $adminUsers = [
+            ['name' => 'Super Admin', 'role' => 'Super Admin'],
+            ['name' => 'Admin', 'role' => 'Admin'],
+            ['name' => 'Manager', 'role' => 'Manager'],
+            ['name' => 'Editor', 'role' => 'Editor'],
+            ['name' => 'Author', 'role' => 'Author'],
+            ['name' => 'User', 'role' => 'User'],
+            ['name' => 'Visitor', 'role' => 'Visitor'],
+            ['name' => 'Auditor', 'role' => 'Auditor'],
         ];
 
-        foreach ($users as $name => $role) {
-            $email = strtolower($name) . '@mail.com';
+        foreach ($adminUsers as $userData) {
+            $email = strtolower(str_replace(' ', '', $userData['name'])) . '@mail.com';
 
             $user = User::updateOrCreate(
                 ['email' => $email],
                 [
-                    'name' => $name,
+                    'name' => $userData['name'],
                     'email_verified_at' => now(),
-                    'profile_photo_path' => null,
+                    'profile_photo_path' => 'avatars/avatar-default.webp',
                     'password' => Hash::make('password'),
                 ]
             );
 
-            // Role-based permissions only - no direct user permissions
-            $user->syncRoles([$role]);
+            $user->syncRoles([$userData['role']]);
         }
+
+        // Generate 300 visitor users
+        // for ($i = 1; $i <= 300; $i++) {
+        //     $user = User::updateOrCreate(
+        //         ['email' => "visitor{$i}@mail.com"],
+        //         [
+        //             'name' => "Visitor {$i}",
+        //             'email_verified_at' => now(),
+        //             'profile_photo_path' => 'avatars/avatar-default.webp',
+        //             'password' => Hash::make('password'),
+        //         ]
+        //     );
+
+        //     $user->syncRoles(['Visitor']);
+        // }
     }
 }

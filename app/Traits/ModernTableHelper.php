@@ -16,7 +16,7 @@ trait ModernTableHelper
             // Extract ModernTable parameters
             $start = (int) $request->input('start', 0);
             $length = (int) $request->input('length', 10);
-            $draw = (int) $request->input('draw', 1);
+            $draw = (int) $request->input('draw', 1); 
 
             // Build base query
             $baseQuery = $this->buildModernTableQuery($config);
@@ -122,7 +122,21 @@ trait ModernTableHelper
                 $query->where(function ($q) use ($search, $config) {
                     foreach ($config['searchable'] as $column) {
                         if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_\.]*$/', $column)) {
-                            $q->orWhere($column, 'LIKE', "%{$search}%");
+                            // Check if there's a search transformer for this column
+                            $transformedValue = $search;
+                            if (isset($config['search_transformers'][$column])) {
+                                $transformer = $config['search_transformers'][$column];
+                                if (is_callable($transformer)) {
+                                    $transformedValue = $transformer($search);
+                                }
+                            }
+                            
+                            // Use exact match if transformed value is different from original
+                            if ($transformedValue !== $search && in_array($transformedValue, ['0', '1'])) {
+                                $q->orWhere($column, '=', $transformedValue);
+                            } else {
+                                $q->orWhereRaw("LOWER({$column}) LIKE LOWER(?)", ["%{$transformedValue}%"]);
+                            }
                         }
                     }
                 });
@@ -156,7 +170,7 @@ trait ModernTableHelper
                 continue;
             }
 
-            $query->where(function ($q) use ($searchColumns, $searchValue, $columnData) {
+            $query->where(function ($q) use ($searchColumns, $searchValue, $columnData, $config) {
                 foreach ($searchColumns as $dbColumn) {
                     if ($columnData === 'created_at') {
                         // dukung format YYYY-MM-DD dan DD/MM/YYYY
@@ -169,7 +183,21 @@ trait ModernTableHelper
                             }
                         }
                     } else {
-                        $q->orWhere($dbColumn, 'like', "%{$searchValue}%");
+                        // Check if there's a search transformer for this column
+                        $transformedValue = $searchValue;
+                        if (isset($config['search_transformers'][$dbColumn])) {
+                            $transformer = $config['search_transformers'][$dbColumn];
+                            if (is_callable($transformer)) {
+                                $transformedValue = $transformer($searchValue);
+                            }
+                        }
+                        
+                        // Use exact match if transformed value is different from original
+                        if ($transformedValue !== $searchValue && in_array($transformedValue, ['0', '1'])) {
+                            $q->orWhere($dbColumn, '=', $transformedValue);
+                        } else {
+                            $q->orWhereRaw("LOWER({$dbColumn}) LIKE LOWER(?)", ["%{$transformedValue}%"]);
+                        }
                     }
                 }
             });

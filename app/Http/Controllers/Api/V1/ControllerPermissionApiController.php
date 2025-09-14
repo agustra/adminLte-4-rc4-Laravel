@@ -35,10 +35,29 @@ class ControllerPermissionApiController extends Controller
                     'cp.id',
                     'cp.controller',
                     'cp.method',
-                    DB::raw('CAST(cp.permissions AS JSON) as permissions'),
+                    'cp.permissions',
                     'cp.is_active',
                 ],
                 'searchable' => $this->tableSearchable,
+                'column_mapping' => [
+                    'is_active' => 'cp.is_active',
+                    'controller' => 'cp.controller',
+                    'method' => 'cp.method',
+                    'permissions' => 'cp.permissions'
+                ],
+                'search_transformers' => [
+                    'cp.is_active' => function($searchValue) {
+                        $searchValue = strtolower(trim($searchValue));
+                        // Check for partial matches
+                        if (str_contains('aktif', $searchValue) || str_contains('active', $searchValue) || $searchValue === '1') {
+                            return '1';
+                        } elseif (str_contains('nonaktif', $searchValue) || str_contains('inactive', $searchValue) || 
+                                 str_contains('tidak aktif', $searchValue) || $searchValue === '0') {
+                            return '0';
+                        }
+                        return $searchValue; // Return original if no match
+                    }
+                ],
                 'sortable' => [
                     'id' => 'cp.id',
                     'controller' => 'cp.controller',

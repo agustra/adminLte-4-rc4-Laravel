@@ -14,6 +14,7 @@ class Menu extends Model
         'url',
         'icon',
         'permission',
+        'roles',
         'parent_id',
         'order',
         'is_active',
@@ -21,6 +22,7 @@ class Menu extends Model
 
     protected $casts = [
         'is_active' => 'string',
+        'roles' => 'array',
     ];
 
     public function parent()

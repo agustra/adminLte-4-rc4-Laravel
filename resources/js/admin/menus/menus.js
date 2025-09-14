@@ -9,6 +9,7 @@ import { ActionButton } from "@tables/ActionButton.js";
 import { showModal } from "@handlers/modalHandler.js";
 import { fetchAxios } from "@handlers/fetchAxios.js";
 import { initializePermissionsTomSelect } from "@tomselect/permissionsSelect.js";
+import { initializeRolesTomSelect } from "@tomselect/rolesSelect.js";
 import filterData from "@helpers/filterData.js";
 import DateRangePicker from "@helpers/DateRangePicker.js";
 import { formatDate, getTodayString } from "@utils/formatDate.js";
@@ -166,7 +167,44 @@ function createTableConfig() {
                     data ? `<i class="${data}"></i> ${data}` : "-",
             },
             { data: "permission", title: "Permission", orderable: true },
-            { data: "parent", title: "Parent", orderable: true },
+            {
+                data: "roles",
+                title: "Roles",
+                orderable: false,
+                render: (data, type, row) => {
+                    // Handle different data types
+                    if (!data) {
+                        return '<span class="text-muted">All Roles</span>';
+                    }
+
+                    // If data is string (JSON), parse it
+                    if (typeof data === "string") {
+                        try {
+                            data = JSON.parse(data);
+                        } catch (e) {
+                            return '<span class="text-muted">All Roles</span>';
+                        }
+                    }
+
+                    // Check if it's array and has items
+                    if (!Array.isArray(data) || data.length === 0) {
+                        return '<span class="text-muted">All Roles</span>';
+                    }
+
+                    return data
+                        .map(
+                            (role) =>
+                                `<span class="badge bg-info me-1">${role}</span>`
+                        )
+                        .join("");
+                },
+            },
+            {
+                data: "parent_name",
+                title: "Parent",
+                orderable: true,
+                render: (data) => data || "-",
+            },
             { data: "order", title: "Order", orderable: true },
             {
                 data: "is_active",
@@ -328,14 +366,23 @@ if (!window.menusModalListenerAttached) {
 
         // Initialize TomSelect for permissions
         const permissionsSelect = modal.querySelector("#permission");
-        // initializePermissionsTomSelect(permissionsSelect);
-
-        // Untuk menu (single select)
         initializePermissionsTomSelect(permissionsSelect, {
             multiple: false,
             grouped: true,
             createSingle: true,
         });
+
+        // Initialize TomSelect for roles
+        const rolesSelect = modal.querySelector("#roles");
+        if (rolesSelect) {
+            initializeRolesTomSelect(rolesSelect, {
+                plugins: ["remove_button"],
+                placeholder: "Pilih roles (kosongkan untuk semua role)",
+                allowEmptyOption: true,
+                multiple: true,
+                create: false,
+            });
+        }
 
         // Initialize Icon Picker
         initializeIconPicker(e);

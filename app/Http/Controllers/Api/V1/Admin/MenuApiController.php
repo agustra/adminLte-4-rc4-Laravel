@@ -23,13 +23,15 @@ class MenuApiController extends Controller
 
     protected $tableName = 'menus';
 
-    protected array $tableSearchable = ['m.name', 'm.url', 'm.permission', 'p.name', 'm.is_active'];
+    protected array $tableSearchable = ['m.name', 'm.url', 'm.permission', 'p.name', 'm.roles', 'm.is_active'];
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'url' => 'nullable|string|max:255',
         'icon' => 'required|string|max:255',
         'permission' => 'nullable|string|max:255',
+        'roles' => 'nullable|array',
+        'roles.*' => 'integer|exists:roles,id',
         'parent_id' => 'nullable|exists:menus,id',
         'order' => 'integer|min:0',
         'is_active' => 'in:aktif,inaktif',
@@ -54,7 +56,7 @@ class MenuApiController extends Controller
         try {
             $this->authorize('read ' . $this->authorizeAction, 'web');
 
-            return $this->handleModernTableRequest($request, [
+            $result = $this->handleModernTableRequest($request, [
                 'table' => $this->tableName,
                 'alias' => 'm',
                 'joins' => [
@@ -71,12 +73,23 @@ class MenuApiController extends Controller
                     'm.url',
                     'm.icon',
                     'm.permission',
+                    'm.roles',
                     'm.parent_id',
                     'p.name as parent_name',
                     'm.order',
                     'm.is_active',
                 ],
                 'searchable' => $this->tableSearchable,
+                'column_mapping' => [
+                    'parent_name' => 'p.name',
+                    'roles' => 'm.roles',
+                    'permission' => 'm.permission',
+                    'name' => 'm.name',
+                    'url' => 'm.url',
+                    'icon' => 'm.icon',
+                    'order' => 'm.order',
+                    'is_active' => 'm.is_active'
+                ],
                 'sortable' => [
                     'id' => 'm.id',
                     'name' => 'm.name',
@@ -116,6 +129,8 @@ class MenuApiController extends Controller
                     'timestamp' => now()->toISOString(),
                 ]
             ]);
+
+            return $result;
         } catch (\Throwable $e) {
             return $this->handleException($e);
         }
@@ -134,6 +149,12 @@ class MenuApiController extends Controller
             // Convert empty string to null for parent_id
             if (isset($validated['parent_id']) && $validated['parent_id'] === '') {
                 $validated['parent_id'] = null;
+            }
+
+            // Convert role IDs to role names
+            if (isset($validated['roles']) && is_array($validated['roles'])) {
+                $roleNames = \Spatie\Permission\Models\Role::whereIn('id', $validated['roles'])->pluck('name')->toArray();
+                $validated['roles'] = $roleNames;
             }
 
             $menu = Menu::create($validated);
@@ -177,6 +198,12 @@ class MenuApiController extends Controller
             // Convert empty string to null for parent_id
             if (isset($validated['parent_id']) && $validated['parent_id'] === '') {
                 $validated['parent_id'] = null;
+            }
+
+            // Convert role IDs to role names
+            if (isset($validated['roles']) && is_array($validated['roles'])) {
+                $roleNames = \Spatie\Permission\Models\Role::whereIn('id', $validated['roles'])->pluck('name')->toArray();
+                $validated['roles'] = $roleNames;
             }
 
             $menu->update($validated);
@@ -230,6 +257,8 @@ class MenuApiController extends Controller
             return $this->handleException($e);
         }
     }
+
+
 
     public function getSidebarMenu()
     {

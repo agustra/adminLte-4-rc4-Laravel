@@ -18,7 +18,7 @@
             <li class="nav-item dropdown idfiltertgl mt-1 me-2" id="idFilterDateRange"></li>
             <li class="nav-item dropdown idfiltertgl mt-1 me-2" id="idSingleDate"></li>
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown mt-1">
                 <select id="theme-dropdown" class="form-select form-select-sm" style="width: auto; border: none; background: transparent;">
                     <option value="light">☀️ Light</option>
                     <option value="dark">🌙 Dark</option>

@@ -36,6 +36,7 @@ class MenuSeeder extends Seeder
             'url' => '#',
             'icon' => 'fas fa-cogs',
             'permission' => null,
+            'roles' => ['Super Admin', 'Admin', 'Manager'], // Hanya role ini yang bisa akses
             'order' => 4,
             'is_active' => 'aktif',
         ]);
@@ -114,7 +115,7 @@ class MenuSeeder extends Seeder
             'name' => 'Dynamic Permissions',
             'url' => '/admin/controller-permissions',
             'icon' => 'far fa-circle',
-            'permission' => 'menu permissions',
+            'permission' => 'menu controller-permissions',
             'parent_id' => $managementSystem->id,
             'order' => 8,
             'is_active' => 'aktif',

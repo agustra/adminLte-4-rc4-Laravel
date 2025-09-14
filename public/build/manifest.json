@@ -130,7 +130,7 @@
     "isEntry": true
   },
   "resources/js/admin/admin.js": {
-    "file": "assets/admin-rZkJY82M.js",
+    "file": "assets/admin-BVtCCBj1.js",
     "name": "admin",
     "src": "resources/js/admin/admin.js",
     "isEntry": true,
@@ -204,7 +204,7 @@
     ]
   },
   "resources/js/admin/menus/menus.js": {
-    "file": "assets/menus-C6e5iigo.js",
+    "file": "assets/menus-DLc79CB5.js",
     "name": "menus",
     "src": "resources/js/admin/menus/menus.js",
     "isDynamicEntry": true,
@@ -216,6 +216,7 @@
       "_modalHandler-Bg5eHBCv.js",
       "_fetchAxios-Cye8cR7v.js",
       "resources/js/components/tomselect/permissionsSelect.js",
+      "resources/js/components/tomselect/rolesSelect.js",
       "_DateRangePicker-pIMxf9xW.js",
       "resources/js/components/apiService/axiosClient.js",
       "_badgeUpdater-D1PKXa5-.js",
@@ -244,7 +245,7 @@
     ]
   },
   "resources/js/admin/roles/roles.js": {
-    "file": "assets/roles-BzrAtU2i.js",
+    "file": "assets/roles-Cr20J-Uv.js",
     "name": "roles",
     "src": "resources/js/admin/roles/roles.js",
     "isDynamicEntry": true,
@@ -277,7 +278,7 @@
     ]
   },
   "resources/js/admin/users/users.js": {
-    "file": "assets/users-DhP6xO9j.js",
+    "file": "assets/users-H5nQfyfv.js",
     "name": "users",
     "src": "resources/js/admin/users/users.js",
     "isDynamicEntry": true,

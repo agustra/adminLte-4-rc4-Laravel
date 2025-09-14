@@ -69,9 +69,32 @@
                         menu</small>
                 </div>
 
+
+                {{-- @dump($menu->permission_id) --}}
+                <div class="col-md-6 mb-3">
+                    <x-forms.tomSelect label="roles" id="roles" name="roles" :useEmoji="true" emoji="🔐"
+                        value="{{ $menu->role_id ?? '' }}" :multiple="true" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <x-forms.tomSelect label="Permission" id="permission" name="permission" :useEmoji="true"
+                        emoji="🔐" value="{{ $menu->permission_id ?? '' }}" :multiple="true" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <x-forms.tomSelect label="Parent Menu" id="parent_id" name="parent_id" :useEmoji="true"
+                        emoji="📁" value="{{ $menu->parent_id ?? 'aktif' }}" :options="$parentMenus" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <x-forms.input label="Order" name="order" id="order" type="number" :useEmoji="true"
+                        emoji="🔢" value="{{ old('order', $menu->order ?? 0) }}" />
+                    <small class="text-muted">Urutan tampil menu (0 = paling atas)</small>
+                </div>
+
                 <div class="col-md-6 mb-3">
                     <div class="form-group">
-                        <label for="icon">🎨 Icon</label>
+                        <label for="icon" class="mb-2">🎨 Icon</label>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text">
                                 <span>🎨</span>
@@ -110,38 +133,9 @@
                     </div>
                 </div>
 
-                {{-- @dump($menu->permission_id) --}}
-
-                <div class="col-md-6">
-                    <x-forms.tomSelect label="Permission" id="permission" name="permission" :useEmoji="true"
-                        emoji="🔐" value="{{ $menu->permission_id ?? '' }}" />
-                </div>
-
                 <div class="col-md-6 mb-3">
-                    <div class="form-group">
-                        <label for="parent_id">📁 Parent Menu</label>
-                        <select class="form-select" id="parent_id" name="parent_id">
-                            <option value="">-- No Parent --</option>
-                            @foreach ($parentMenus as $parent)
-                                <option value="{{ $parent->id }}"
-                                    {{ old('parent_id', $menu->parent_id ?? '') == $parent->id ? 'selected' : '' }}>
-                                    {{ $parent->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <small class="text-muted">Kosongkan untuk root menu, pilih parent untuk submenu</small>
-                    </div>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <x-forms.input label="Order" name="order" id="order" type="number" :useEmoji="true"
-                        emoji="🔢" value="{{ old('order', $menu->order ?? 0) }}" />
-                    <small class="text-muted">Urutan tampil menu (0 = paling atas)</small>
-                </div>
-
-                <div class="col-md-12 mb-3">
-                    <x-forms.tomSelect label="Status" id="is_active" name="is_active" :useEmoji="true"
-                        emoji="📊" value="{{ $menu->is_active ?? 'aktif' }}" :options="['aktif' => '✅ Aktif', 'inaktif' => '❌ Inaktif']" />
+                    <x-forms.tomSelect label="Status" id="is_active" name="is_active" :useEmoji="true" emoji="📊"
+                        value="{{ $menu->is_active ?? 'aktif' }}" :options="['aktif' => '✅ Aktif', 'inaktif' => '❌ Inaktif']" />
                 </div>
 
                 <!-- Badge System Information -->

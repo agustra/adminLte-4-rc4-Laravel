@@ -21,7 +21,7 @@ function initializeRolesTomSelect(eventOrElement) {
     const selectedRoles = rolesSelect.dataset.selected
         ? rolesSelect.dataset.selected
               .split(",")
-              .filter((id) => id.trim())
+              .filter((id) => id.trim()) 
         : [];
 
     const rolesTomSelect = new InitTomSelect(rolesSelect, {

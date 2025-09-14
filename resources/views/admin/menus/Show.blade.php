@@ -30,6 +30,18 @@
                     <td>{{ $menu->permission ?: '-' }}</td>
                 </tr>
                 <tr>
+                    <th>Roles</th>
+                    <td>
+                        @if($menu->roles && count($menu->roles) > 0)
+                            @foreach($menu->roles as $role)
+                                <span class="badge bg-info me-1">{{ $role }}</span>
+                            @endforeach
+                        @else
+                            <span class="text-muted">All Roles</span>
+                        @endif
+                    </td>
+                </tr>
+                <tr>
                     <th>Parent Menu</th>
                     <td>{{ $menu->parent ? $menu->parent->name : '-' }}</td>
                 </tr>

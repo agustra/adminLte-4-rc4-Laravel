@@ -37,34 +37,29 @@ class MenuBuilder
         // Check authentication from multiple guards (web, api)
         $user = auth('web')->user() ?? auth('api')->user();
 
-        // If no user is authenticated, show all menus (for development/testing)
+        // If no user is authenticated, hide menu
         if (! $user) {
-            // For development: show all menus when not authenticated
-            // In production, you might want to return '' here
-        } else {
+            return '';
+        }
 
-            // Permission check for authenticated users
-            if ($menu->permission) {
-                try {
-                    // Admin can see all menus
-                    if ($user->hasRole('admin') || $user->hasRole('Admin')) {
-                        // Admin can see everything
-                    } elseif (! $user->can($menu->permission)) {
-                        return '';
-                    }
-                } catch (\Exception $e) {
-                    // If permission check fails, allow for admin users only
-                    if (! $user->hasRole('admin') && ! $user->hasRole('Admin')) {
-                        return '';
-                    }
+        // Permission check for authenticated users
+        if ($menu->permission) {
+            if (! $user->can($menu->permission)) {
+                return '';
+            }
+        }
+
+        // Role check for authenticated users (if roles specified)
+        if ($menu->roles && is_array($menu->roles) && count($menu->roles) > 0) {
+            $hasRequiredRole = false;
+            foreach ($menu->roles as $role) {
+                if ($user->hasRole($role)) {
+                    $hasRequiredRole = true;
+                    break;
                 }
             }
-
-            // Admin role check for admin URLs
-            if (str_contains($menu->url, '/admin/')) {
-                if (! $user->hasRole('admin') && ! $user->hasRole('Admin')) {
-                    return '';
-                }
+            if (!$hasRequiredRole) {
+                return '';
             }
         }
 

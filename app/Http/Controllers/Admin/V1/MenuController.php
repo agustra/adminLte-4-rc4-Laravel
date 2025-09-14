@@ -28,7 +28,7 @@ class MenuController extends Controller
 
         try {
             $menu = new Menu;
-            $parentMenus = Menu::whereNull('parent_id')->orderBy('order')->get();
+            $parentMenus = Menu::whereNull('parent_id')->orderBy('order')->pluck('name', 'id');
 
             return view('admin.menus.Form', compact('menu', 'parentMenus'));
         } catch (\Exception $e) {
@@ -42,6 +42,8 @@ class MenuController extends Controller
 
         try {
             $menu = Menu::findOrFail($id);
+
+            // dd($menu);
 
             // Mapping permission ID
             $menu->permission_id = null;
@@ -58,13 +60,21 @@ class MenuController extends Controller
                 }
             }
 
+            // Mapping roles ID untuk TomSelect
+            $menu->role_id = '';
+            if ($menu->roles && is_array($menu->roles)) {
+                // Convert role names to IDs for TomSelect
+                $roleIds = \Spatie\Permission\Models\Role::whereIn('name', $menu->roles)->pluck('id')->toArray();
+                $menu->role_id = implode(',', $roleIds);
+            }
+
             // Ambil daftar permission untuk select
             $permissions = \Spatie\Permission\Models\Permission::pluck('name', 'id');
 
             $parentMenus = Menu::whereNull('parent_id')
                 ->where('id', '!=', $id)
                 ->orderBy('order')
-                ->get();
+                ->pluck('name', 'id');
 
             return view('admin.menus.Form', compact('menu', 'parentMenus', 'permissions'));
         } catch (\Exception $e) {
