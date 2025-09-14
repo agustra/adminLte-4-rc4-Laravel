@@ -124,6 +124,8 @@ const handleBulkDelete = createBulkDeleteHandler({
             selectedItems.length,
             `${generalConfig.itemName} deleted`
         );
+        // Clear badge config cache after bulk delete
+        document.dispatchEvent(new CustomEvent('badgeConfigChanged'));
         // Badge update handled automatically by fetchAxios
     },
     onError: (error) => {
@@ -286,6 +288,8 @@ function setupEventListeners(tableInstance) {
         onDeleteSuccess: () => {
             tableInstance.reload();
             tableInstance.clearSelection();
+            // Clear badge config cache when config is deleted
+            document.dispatchEvent(new CustomEvent('badgeConfigChanged'));
         },
     });
 
@@ -317,7 +321,18 @@ function setupEventListeners(tableInstance) {
                         data: new FormData(form),
                     },
                     "simpan",
-                    () => tableInstance.reload()
+                    () => {
+                        tableInstance.reload();
+                        // Clear badge config cache when config changes
+                        document.dispatchEvent(new CustomEvent('badgeConfigChanged'));
+                        
+                        // Force refresh all badges after cache clear
+                        setTimeout(() => {
+                            import('@components/sidebar/badgeUpdater.js').then(module => {
+                                module.autoUpdateBadgeForUrl();
+                            });
+                        }, 1000);
+                    }
                 );
             }
         }

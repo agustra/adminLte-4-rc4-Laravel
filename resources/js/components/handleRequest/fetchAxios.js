@@ -1,5 +1,6 @@
 import { sendAxiosRequest } from "./requestService.js";
 import { autoUpdateBadgeForUrl } from "@components/sidebar/badgeUpdater.js";
+import { badgeCache } from "@components/sidebar/badgeConfigCache.js";
 
 // Fungsi utama untuk Fetch Setting
 export function fetchAxios(options, actionType, callback) {
@@ -8,19 +9,26 @@ export function fetchAxios(options, actionType, callback) {
         return;
     }
 
-    // Enhanced callback to include badge update
-    const enhancedCallback = function (...args) {
+    // Enhanced callback to include smart badge update
+    const enhancedCallback = async function (...args) {
         // Call original callback if exists
         if (callback && typeof callback === "function") {
             callback(...args);
         }
 
-        // Badge update for relevant operations
+        // Smart badge update - only if URL has active badge config
         if (
             (actionType === "simpan" || actionType === "delete") &&
             options.url
         ) {
-            autoUpdateBadgeForUrl(options.url);
+            try {
+                const shouldUpdate = await badgeCache.shouldUpdateBadge(options.url);
+                if (shouldUpdate) {
+                    autoUpdateBadgeForUrl(options.url);
+                }
+            } catch (error) {
+                console.error('Error in badge update logic:', error);
+            }
         }
     }; 
 

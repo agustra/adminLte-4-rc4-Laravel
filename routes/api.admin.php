@@ -75,6 +75,7 @@ Route::middleware('auth:api', 'dynamic.permission')->group(
         Route::get('/menu/badge-count', [MenuBadgeController::class, 'getBadgeCount'])->name('menu.badge-count');
         Route::get('/menu/all-badge-counts', [MenuBadgeController::class, 'getAllBadgeCounts'])->name('menu.all-badge-counts');
         Route::post('/menu/clear-badge-cache', [MenuBadgeController::class, 'clearBadgeCache'])->name('menu.clear-badge-cache');
+        Route::get('/menu/active-urls', [MenuBadgeController::class, 'getActiveUrls'])->name('menu.active-urls');
 
         // Badge Config Routes
         Route::get('/badge-configs/models', [MenuBadgeConfigApiController::class, 'getAvailableModels'])->name('badge-configs.models');

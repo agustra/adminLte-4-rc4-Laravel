@@ -82,4 +82,19 @@ class MenuBadgeController extends Controller
             'message' => 'Badge cache cleared',
         ]);
     }
+
+    /**
+     * Get active badge config URLs for frontend caching
+     */
+    public function getActiveUrls()
+    {
+        $urls = \App\Models\MenuBadgeConfig::where('is_active', true)
+            ->pluck('menu_url')
+            ->toArray();
+
+        return response()->json([
+            'success' => true,
+            'urls' => $urls,
+        ]);
+    }
 }
