@@ -53,55 +53,10 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <div class="form-group">
-                        <label for="model_class" class="mb-2">📦 Model Class</label>
-                        <select class="form-select form-select-sm" id="model_class_select"
-                            onchange="toggleModelInput()">
-                            <option value="">-- Pilih Model --</option>
-                            @foreach ($availableModels as $class => $name)
-                                <option value="{{ $class }}"
-                                    {{ old('model_class', $config->model_class ?? '') == $class ? 'selected' : '' }}>
-                                    {{ $name }} ({{ $class }})
-                                </option>
-                            @endforeach
-                            <option value="custom">✏️ Input Manual</option>
-                        </select>
-
-                        <input type="text" class="form-control mt-2" id="model_class_input" name="model_class"
-                            value="{{ old('model_class', $config->model_class ?? '') }}"
-                            placeholder="App\Models\YourModel" style="display: none;">
-
-                        <small class="text-muted">Model yang akan dihitung badge-nya. Pilih dari list atau input
-                            manual.</small>
-                    </div>
+                    <x-forms.tomSelect label="Model Class" id="model_class" name="model_class" :useEmoji="true"
+                        emoji="📦" value="{{ $modelClassValue }}" :options="$modelClassOptions" />
+                    <small class="text-muted">Model yang akan dihitung badge-nya. Pilih dari list atau ketik custom model class.</small>
                 </div>
-
-                <script>
-                    function toggleModelInput() {
-                        const select = document.getElementById('model_class_select');
-                        const input = document.getElementById('model_class_input');
-
-                        if (select.value === 'custom') {
-                            select.style.display = 'none';
-                            input.style.display = 'block';
-                            input.focus();
-                        } else {
-                            input.value = select.value;
-                        }
-                    }
-
-                    // Initialize on load
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const input = document.getElementById('model_class_input');
-                        const select = document.getElementById('model_class_select');
-
-                        if (input.value && !select.querySelector(`option[value="${input.value}"]`)) {
-                            // Custom model, show input
-                            select.style.display = 'none';
-                            input.style.display = 'block';
-                        }
-                    });
-                </script>
 
                 <div class="col-md-6 mb-3">
                     <x-forms.tomSelect label="Date Fields" id="date_fields" name="date_fields" :useEmoji="true"

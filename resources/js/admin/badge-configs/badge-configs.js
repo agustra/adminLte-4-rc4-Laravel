@@ -124,6 +124,7 @@ const handleBulkDelete = createBulkDeleteHandler({
             selectedItems.length,
             `${generalConfig.itemName} deleted`
         );
+        // Badge update handled automatically by fetchAxios
     },
     onError: (error) => {
         console.error("❌ Bulk delete failed:", error);
@@ -323,6 +324,64 @@ function setupEventListeners(tableInstance) {
     });
 }
 
+// TomSelect Helper Functions
+function createDateFieldValidator() {
+    return function (input, callback) {
+        if (!input || input.trim().length < 2) {
+            callback();
+            return;
+        }
+
+        const newField = input.trim();
+
+        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(newField)) {
+            showToast(
+                "Field name harus format valid (contoh: created_at, registration_date)",
+                "error"
+            );
+            callback();
+            return;
+        }
+
+        callback({ value: newField, text: newField });
+        showToast(`Field '${newField}' berhasil ditambahkan`, "success");
+    };
+}
+
+function createModelClassValidator() {
+    return function (input, callback) {
+        if (!input || input.trim().length < 5) {
+            callback();
+            return;
+        }
+
+        const newModel = input.trim();
+
+        if (!/^App\\Models\\[A-Za-z][A-Za-z0-9]*$/.test(newModel)) {
+            showToast(
+                "Model class harus format valid (contoh: App\\Models\\YourModel)",
+                "error"
+            );
+            callback();
+            return;
+        }
+
+        callback({ value: newModel, text: newModel });
+        showToast(`Model '${newModel}' berhasil ditambahkan`, "success");
+    };
+}
+
+function getCommonRender() {
+    return {
+        option: function (data, escape) {
+            return `<div>${escape(data.text)}</div>`;
+        },
+        item: function (data, escape) {
+            return `<div>${escape(data.text)}</div>`;
+        },
+    };
+}
+
 // Modal handlers for TomSelect
 document.addEventListener("shown.bs.modal", async (e) => {
     const modal = e.target;
@@ -341,56 +400,27 @@ document.addEventListener("shown.bs.modal", async (e) => {
                 tomSelectModule;
 
             // ---- 3. Inisialisasi setelah lib siap ----
+
+            // Initialize Date Fields TomSelect
             const dateFieldsElement = modal.querySelector("#date_fields");
             if (dateFieldsElement && !dateFieldsElement.tomselect) {
                 new TomSelect(dateFieldsElement, {
                     create: true,
-                    maxItems: null, // null = multiple tanpa batas
+                    maxItems: null,
                     placeholder: "Pilih atau ketik field tanggal...",
+                    onCreate: createDateFieldValidator(),
+                    render: getCommonRender(),
+                });
+            }
 
-                    // Callback saat user create item baru
-                    onCreate: function (input, callback) {
-                        // Validasi input (opsional)
-                        if (!input || input.trim().length < 2) {
-                            callback();
-                            return;
-                        }
-
-                        const newField = input.trim();
-
-                        // Bisa tambah validasi format field name
-                        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(newField)) {
-                            showToast(
-                                "Field name harus format valid (contoh: created_at, registration_date)",
-                                "error"
-                            );
-                            callback();
-                            return;
-                        }
-
-                        // Create item baru
-                        callback({
-                            value: newField,
-                            text: newField,
-                        });
-
-                        // Custom field akan tersimpan saat form di-save
-
-                        showToast(
-                            `Field '${newField}' berhasil ditambahkan`,
-                            "success"
-                        );
-                    },
-
-                    // Render option
-                    render: {
-                        option: function (data, escape) {
-                            return `<div>${escape(data.text)}</div>`;
-                        },
-                        item: function (data, escape) {
-                            return `<div>${escape(data.text)}</div>`;
-                        },
-                    },
+            // Initialize Model Class TomSelect
+            const modelClassElement = modal.querySelector("#model_class");
+            if (modelClassElement && !modelClassElement.tomselect) {
+                new TomSelect(modelClassElement, {
+                    create: true,
+                    placeholder: "Pilih atau ketik model class...",
+                    onCreate: createModelClassValidator(),
+                    render: getCommonRender(),
                 });
             }
         } catch (error) {

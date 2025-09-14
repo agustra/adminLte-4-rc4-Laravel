@@ -81,17 +81,19 @@ function updateBadgeInDOM(menuUrl, count, color) {
  */
 export async function autoUpdateBadgeForUrl(url) {
     try {
-        // Get all configured badge URLs from API
+        // Clear all badge cache first
+        await axiosClient.post("/api/menu/clear-badge-cache");
+        
+        // Get fresh badge counts
         const response = await axiosClient.get("/api/menu/all-badge-counts");
 
         if (response.data.success) {
             const badges = response.data.badges;
 
-            // Update all badges that might be affected
+            // Update all badges directly without additional cache clearing
             Object.keys(badges).forEach((menuUrl) => {
-                setTimeout(() => {
-                    updateMenuBadge(menuUrl);
-                }, 500);
+                const { count, color } = badges[menuUrl];
+                updateBadgeInDOM(menuUrl, count, color);
             });
         }
     } catch (error) {

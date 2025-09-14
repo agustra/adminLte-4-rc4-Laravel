@@ -42,13 +42,12 @@ class MenuBadgeController extends Controller
     }
 
     /**
-     * Get all badge counts for all active configured menus
+     * Get all badge counts for all configured menus (active and inactive)
      */
     public function getAllBadgeCounts()
     {
-        $menuUrls = \App\Models\MenuBadgeConfig::where('is_active', true)
-            ->pluck('menu_url')
-            ->toArray();
+        // Get ALL configured menu URLs (not just active ones)
+        $menuUrls = \App\Models\MenuBadgeConfig::pluck('menu_url')->toArray();
 
         $badges = [];
 

@@ -50,8 +50,15 @@ class MenuBadgeConfigController extends Controller
                 'birth_date' => 'birth_date',
                 'hire_date' => 'hire_date'
             ];
+            
+            // Handle model class for TomSelect
+            $modelClassValue = old('model_class', '');
+            $modelClassOptions = [];
+            foreach ($availableModels as $class => $name) {
+                $modelClassOptions[$class] = "$name ($class)";
+            }
 
-            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions', 'statusValue', 'currentFields', 'dateFieldOptions'));
+            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions', 'statusValue', 'currentFields', 'dateFieldOptions', 'modelClassValue', 'modelClassOptions'));
         } catch (\Throwable $e) {
             return $this->handleException($e);
         }
@@ -93,8 +100,15 @@ class MenuBadgeConfigController extends Controller
                 'birth_date' => 'birth_date',
                 'hire_date' => 'hire_date'
             ];
+            
+            // Handle model class for TomSelect
+            $modelClassValue = old('model_class', $config->model_class ?? '');
+            $modelClassOptions = [];
+            foreach ($availableModels as $class => $name) {
+                $modelClassOptions[$class] = "$name ($class)";
+            }
 
-            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions', 'statusValue', 'currentFields', 'dateFieldOptions'));
+            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions', 'statusValue', 'currentFields', 'dateFieldOptions', 'modelClassValue', 'modelClassOptions'));
         } catch (\Throwable $e) {
             return $this->handleException($e);
         }

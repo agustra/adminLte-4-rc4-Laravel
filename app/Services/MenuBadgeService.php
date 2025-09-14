@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\MenuBadgeConfig;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class MenuBadgeService
 {
@@ -13,7 +15,7 @@ class MenuBadgeService
      */
     public static function getBadgeCount($menuUrl)
     {
-        $cacheKey = 'menu_badge_'.hash('sha256', $menuUrl).'_'.Carbon::today()->format('Y-m-d');
+        $cacheKey = 'menu_badge_' . hash('sha256', $menuUrl) . '_' . Carbon::today()->format('Y-m-d');
 
         return Cache::remember($cacheKey, 300, function () use ($menuUrl) { // Cache 5 menit
             return self::calculateBadgeCount($menuUrl);
@@ -39,26 +41,26 @@ class MenuBadgeService
 
                 if (class_exists($modelClass)) {
                     $dateField = $config->date_field;
-                    
+
                     // Check if multiple fields (comma-separated)
                     if (str_contains($dateField, ',')) {
                         // Multiple fields
                         $dateFields = array_map('trim', explode(',', $dateField));
                         $totalCount = 0;
                         $countedIds = [];
-                        
+
                         foreach ($dateFields as $field) {
                             // Get records for this date field
                             $records = $modelClass::whereDate($field, $today)
                                 ->whereNotIn('id', $countedIds)
                                 ->get(['id']);
-                            
+
                             $totalCount += $records->count();
-                            
+
                             // Track counted IDs to avoid duplicates
                             $countedIds = array_merge($countedIds, $records->pluck('id')->toArray());
                         }
-                        
+
                         return $totalCount;
                     } else {
                         // Single field
@@ -66,7 +68,7 @@ class MenuBadgeService
                     }
                 }
             } catch (\Exception $e) {
-                \Log::error('Badge calculation error', [
+                Log::error('Badge calculation error', [
                     'url' => $menuUrl,
                     'model' => $config->model_class,
                     'error' => $e->getMessage(),
@@ -83,7 +85,7 @@ class MenuBadgeService
      */
     public static function clearBadgeCache($menuUrl)
     {
-        $cacheKey = 'menu_badge_'.hash('sha256', $menuUrl).'_'.Carbon::today()->format('Y-m-d');
+        $cacheKey = 'menu_badge_' . hash('sha256', $menuUrl) . '_' . Carbon::today()->format('Y-m-d');
         Cache::forget($cacheKey);
     }
 
@@ -94,13 +96,11 @@ class MenuBadgeService
     {
         $today = Carbon::today()->format('Y-m-d');
 
-        // Get all configured menu URLs
-        $configuredMenus = MenuBadgeConfig::where('is_active', true)
-            ->pluck('menu_url')
-            ->toArray();
+        // Get all configured menu URLs (active and inactive)
+        $configuredMenus = MenuBadgeConfig::pluck('menu_url')->toArray();
 
         foreach ($configuredMenus as $menuUrl) {
-            $cacheKey = 'menu_badge_'.hash('sha256', $menuUrl).'_'.$today;
+            $cacheKey = 'menu_badge_' . hash('sha256', $menuUrl) . '_' . $today;
             Cache::forget($cacheKey);
         }
     }
