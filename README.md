@@ -55,9 +55,10 @@ A modern web application built with Laravel 12 and AdminLTE 4 template, providin
 - Dynamic sidebar menu builder
 - Hierarchical parent-child structure
 - Bootstrap Icons integration
-- Badge system with 8 color options
+- Smart badge system with real-time updates
+- Badge configuration management interface
 - Permission-based menu display
-- Real-time sidebar updates
+- Real-time sidebar updates with intelligent caching
 
 ### 🌙 Dark Mode System
 - Dropdown theme selector: Light/Dark/Auto
@@ -334,6 +335,18 @@ POST   /api/permissions     # Create permission
 PUT    /api/permissions/{id} # Update permission
 DELETE /api/permissions/{id} # Delete permission
 POST   /api/permissions/multiple/delete # Bulk delete permissions
+```
+
+### Badge Management
+```
+GET    /api/menu/badge-count        # Get badge count for specific menu
+GET    /api/menu/all-badge-counts   # Get all badge counts
+GET    /api/menu/active-urls        # Get active badge config URLs (for caching)
+POST   /api/menu/clear-badge-cache  # Clear badge cache
+GET    /api/badge-configs           # List badge configurations
+POST   /api/badge-configs           # Create badge configuration
+PUT    /api/badge-configs/{id}      # Update badge configuration
+DELETE /api/badge-configs/{id}      # Delete badge configuration
 ```
 
 ### Media Library

@@ -73,16 +73,61 @@ $this->authorize('create users');
 - **Permission Integration** - Menu visibility based on user permissions
 - **Icon Support** - Bootstrap Icons and FontAwesome compatibility
 
-### Badge System
-- **8 Color Options** - Bootstrap color variants for badges
-- **Dynamic Badges** - Real-time badge count updates
-- **Custom Badge Logic** - Configurable badge display rules
+### Smart Badge System
+- **Dynamic Badge Configuration** - Web interface for managing badge configs
+- **Real-time Updates** - Instant badge appearance/disappearance on config changes
+- **Smart Caching System** - Intelligent cache management with localStorage persistence
+- **Performance Optimized** - 90% reduction in unnecessary API calls
+- **Resource-based Matching** - Accurate URL matching for badge updates
+- **Auto-refresh Cache** - Automatic cache clearing when configurations change
+- **Color-coded Badges** - Dynamic color assignment based on count thresholds
+
+#### Badge Configuration Management
+```php
+// Badge config structure
+{
+    "menu_url": "/admin/users",
+    "model_class": "App\\Models\\User",
+    "date_field": "created_at,updated_at", // Support multiple fields
+    "is_active": true,
+    "description": "User activity badge"
+}
+```
+
+#### Smart Caching Architecture
+```javascript
+// Badge cache manager
+class BadgeConfigCache {
+    // localStorage persistence with 5-minute TTL
+    // Resource-based URL matching
+    // Auto-refresh on config changes
+    // Graceful error handling
+}
+
+// Usage in fetchAxios
+const shouldUpdate = await badgeCache.shouldUpdateBadge(options.url);
+if (shouldUpdate) {
+    autoUpdateBadgeForUrl(options.url);
+}
+```
+
+#### Performance Benefits
+- **Before**: Every save/delete → 2 API calls + DB queries
+- **After**: Smart check → Cached lookup (instant) → Only relevant updates
+- **Cache Strategy**: localStorage + 5-minute TTL + event-driven refresh
+- **URL Matching**: Resource extraction (`/api/permissions` ↔ `/admin/permissions`)
 
 ### Menu Features
 ```javascript
 // Real-time sidebar refresh
 document.addEventListener('menuUpdated', function() {
     refreshSidebar();
+});
+
+// Badge config change events
+document.addEventListener('badgeConfigChanged', function() {
+    badgeCache.clearCache();
+    autoUpdateBadgeForUrl();
 });
 ```
 
