@@ -35,7 +35,7 @@
         <!-- Welcome Section -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card border-0 bg-gradient-primary text-white">
+                <div class="card border-0 bg-gradient-primary">
                     <div class="card-body py-4">
                         <div class="row align-items-center">
                             <div class="col-md-8">

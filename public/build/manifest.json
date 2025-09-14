@@ -17,19 +17,16 @@
       "assets/DateRangePicker-CxHcPGqG.css"
     ]
   },
-  "_InitTomSelect-CEYaOZ7F.js": {
-    "file": "assets/InitTomSelect-CEYaOZ7F.js",
+  "_InitTomSelect-Cq3HKCL2.js": {
+    "file": "assets/InitTomSelect-Cq3HKCL2.js",
     "name": "InitTomSelect",
     "imports": [
+      "node_modules/tom-select/dist/esm/tom-select.complete.js",
       "resources/js/components/apiService/axiosClient.js"
     ],
     "css": [
-      "assets/InitTomSelect-CR_xEeZJ.css"
+      "assets/tom-select-CR_xEeZJ.css"
     ]
-  },
-  "_InitTomSelect-CR_xEeZJ.css": {
-    "file": "assets/InitTomSelect-CR_xEeZJ.css",
-    "src": "_InitTomSelect-CR_xEeZJ.css"
   },
   "_MediaLibrary-CRxHC4YD.js": {
     "file": "assets/MediaLibrary-CRxHC4YD.js",
@@ -100,6 +97,10 @@
     "file": "assets/preload-helper-BfFHrpNk.js",
     "name": "preload-helper"
   },
+  "_tom-select-CR_xEeZJ.css": {
+    "file": "assets/tom-select-CR_xEeZJ.css",
+    "src": "_tom-select-CR_xEeZJ.css"
+  },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
     "file": "assets/fa-brands-400-DFY6gyJh.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
@@ -124,13 +125,19 @@
     "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
+  "node_modules/tom-select/dist/esm/tom-select.complete.js": {
+    "file": "assets/tom-select.complete-Dc6LGOTC.js",
+    "name": "tom-select.complete",
+    "src": "node_modules/tom-select/dist/esm/tom-select.complete.js",
+    "isDynamicEntry": true
+  },
   "resources/css/app.css": {
     "file": "assets/app-DGZM2dYf.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/admin/admin.js": {
-    "file": "assets/admin-CtogIdCy.js",
+    "file": "assets/admin-Bn7DXL6b.js",
     "name": "admin",
     "src": "resources/js/admin/admin.js",
     "isEntry": true,
@@ -163,7 +170,7 @@
     ]
   },
   "resources/js/admin/badge-configs/badge-configs.js": {
-    "file": "assets/badge-configs-DvvrMVzw.js",
+    "file": "assets/badge-configs-16lIzHrW.js",
     "name": "badge-configs",
     "src": "resources/js/admin/badge-configs/badge-configs.js",
     "isDynamicEntry": true,
@@ -179,10 +186,16 @@
       "resources/js/components/apiService/axiosClient.js",
       "_badgeUpdater-D7fo0NmU.js",
       "__commonjsHelpers-CqkleIqs.js"
+    ],
+    "dynamicImports": [
+      "node_modules/tom-select/dist/esm/tom-select.complete.js"
+    ],
+    "css": [
+      "assets/tom-select-CR_xEeZJ.css"
     ]
   },
   "resources/js/admin/controller-permissions/controller-permissions.js": {
-    "file": "assets/controller-permissions-Cmgv1OJX.js",
+    "file": "assets/controller-permissions-CPrv5Huu.js",
     "name": "controller-permissions",
     "src": "resources/js/admin/controller-permissions/controller-permissions.js",
     "isDynamicEntry": true,
@@ -204,7 +217,7 @@
     ]
   },
   "resources/js/admin/menus/menus.js": {
-    "file": "assets/menus-DuDynW7j.js",
+    "file": "assets/menus-BsQY5kaU.js",
     "name": "menus",
     "src": "resources/js/admin/menus/menus.js",
     "isDynamicEntry": true,
@@ -220,12 +233,16 @@
       "_DateRangePicker-pIMxf9xW.js",
       "resources/js/components/apiService/axiosClient.js",
       "_badgeUpdater-D7fo0NmU.js",
-      "_InitTomSelect-CEYaOZ7F.js",
+      "_InitTomSelect-Cq3HKCL2.js",
+      "node_modules/tom-select/dist/esm/tom-select.complete.js",
       "__commonjsHelpers-CqkleIqs.js"
+    ],
+    "css": [
+      "assets/tom-select-CR_xEeZJ.css"
     ]
   },
   "resources/js/admin/permissions/permissions.js": {
-    "file": "assets/permissions-BtqA4Svf.js",
+    "file": "assets/permissions-D5gnQBtx.js",
     "name": "permissions",
     "src": "resources/js/admin/permissions/permissions.js",
     "isDynamicEntry": true,
@@ -241,11 +258,15 @@
       "resources/js/components/apiService/axiosClient.js",
       "_badgeUpdater-D7fo0NmU.js",
       "__commonjsHelpers-CqkleIqs.js",
-      "_InitTomSelect-CEYaOZ7F.js"
+      "_InitTomSelect-Cq3HKCL2.js",
+      "node_modules/tom-select/dist/esm/tom-select.complete.js"
+    ],
+    "css": [
+      "assets/tom-select-CR_xEeZJ.css"
     ]
   },
   "resources/js/admin/roles/roles.js": {
-    "file": "assets/roles-DhBZ8IDB.js",
+    "file": "assets/roles-BTgfvbXv.js",
     "name": "roles",
     "src": "resources/js/admin/roles/roles.js",
     "isDynamicEntry": true,
@@ -257,12 +278,16 @@
       "_DateRangePicker-pIMxf9xW.js",
       "_modalHandler-l1VpEcIP.js",
       "_fetchAxios-BCs8Bycy.js",
-      "_InitTomSelect-CEYaOZ7F.js",
+      "_InitTomSelect-Cq3HKCL2.js",
       "resources/js/components/apiService/axiosClient.js",
       "_permissionsPopup-33kLpmI4.js",
       "_badgeUpdater-D7fo0NmU.js",
       "__commonjsHelpers-CqkleIqs.js",
+      "node_modules/tom-select/dist/esm/tom-select.complete.js",
       "_preload-helper-BfFHrpNk.js"
+    ],
+    "css": [
+      "assets/tom-select-CR_xEeZJ.css"
     ]
   },
   "resources/js/admin/settings.js": {
@@ -278,7 +303,7 @@
     ]
   },
   "resources/js/admin/users/users.js": {
-    "file": "assets/users--niMkG_s.js",
+    "file": "assets/users-CU2geXkf.js",
     "name": "users",
     "src": "resources/js/admin/users/users.js",
     "isDynamicEntry": true,
@@ -326,23 +351,31 @@
     "isDynamicEntry": true
   },
   "resources/js/components/tomselect/permissionsSelect.js": {
-    "file": "assets/permissionsSelect-Cn7f_TzI.js",
+    "file": "assets/permissionsSelect-d09A7nZV.js",
     "name": "permissionsSelect",
     "src": "resources/js/components/tomselect/permissionsSelect.js",
     "isDynamicEntry": true,
     "imports": [
-      "_InitTomSelect-CEYaOZ7F.js",
-      "resources/js/components/apiService/axiosClient.js"
+      "_InitTomSelect-Cq3HKCL2.js",
+      "resources/js/components/apiService/axiosClient.js",
+      "node_modules/tom-select/dist/esm/tom-select.complete.js"
+    ],
+    "css": [
+      "assets/tom-select-CR_xEeZJ.css"
     ]
   },
   "resources/js/components/tomselect/rolesSelect.js": {
-    "file": "assets/rolesSelect-DSv9e2RQ.js",
+    "file": "assets/rolesSelect-DOJlz329.js",
     "name": "rolesSelect",
     "src": "resources/js/components/tomselect/rolesSelect.js",
     "isDynamicEntry": true,
     "imports": [
-      "_InitTomSelect-CEYaOZ7F.js",
+      "_InitTomSelect-Cq3HKCL2.js",
+      "node_modules/tom-select/dist/esm/tom-select.complete.js",
       "resources/js/components/apiService/axiosClient.js"
+    ],
+    "css": [
+      "assets/tom-select-CR_xEeZJ.css"
     ]
   },
   "resources/js/home.js": {

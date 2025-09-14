@@ -10,7 +10,7 @@
 
         <div class="modal-header">
             <h5 class="modal-title" id="ModalLabel">{{ $menu->id ? 'Edit Menu' : 'Create Menu' }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">❌</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
@@ -72,18 +72,18 @@
 
                 {{-- @dump($menu->permission_id) --}}
                 <div class="col-md-6 mb-3">
-                    <x-forms.tomSelect label="roles" id="roles" name="roles" :useEmoji="true" emoji="🔐"
-                        value="{{ $menu->role_id ?? '' }}" :multiple="true" />
+                    <x-forms.tomSelect label="Roles" id="roles" name="roles" :useEmoji="true" emoji="🔐"
+                        :value="$rolesValue" :multiple="true" />
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <x-forms.tomSelect label="Permission" id="permission" name="permission" :useEmoji="true"
-                        emoji="🔐" value="{{ $menu->permission_id ?? '' }}" :multiple="true" />
+                        emoji="🔐" value="{{ old('permission', $menu->permission ?? '') }}" />
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <x-forms.tomSelect label="Parent Menu" id="parent_id" name="parent_id" :useEmoji="true"
-                        emoji="📁" value="{{ $menu->parent_id ?? 'aktif' }}" :options="$parentMenus" />
+                        emoji="📁" value="{{ old('parent_id', $menu->parent_id ?? '') }}" :options="$parentMenus" />
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -135,7 +135,7 @@
 
                 <div class="col-md-6 mb-3">
                     <x-forms.tomSelect label="Status" id="is_active" name="is_active" :useEmoji="true" emoji="📊"
-                        value="{{ $menu->is_active ?? 'aktif' }}" :options="['aktif' => '✅ Aktif', 'inaktif' => '❌ Inaktif']" />
+                        value="{{ $statusValue }}" :options="['aktif' => '✅ Aktif', 'inaktif' => '❌ Inaktif']" />
                 </div>
 
                 <!-- Badge System Information -->

@@ -29,8 +29,14 @@ class MenuController extends Controller
         try {
             $menu = new Menu;
             $parentMenus = Menu::whereNull('parent_id')->orderBy('order')->pluck('name', 'id');
+            
+            // Handle roles value for TomSelect
+            $rolesValue = old('roles', []);
+            
+            // Handle status value for TomSelect  
+            $statusValue = old('is_active', '');
 
-            return view('admin.menus.Form', compact('menu', 'parentMenus'));
+            return view('admin.menus.Form', compact('menu', 'parentMenus', 'rolesValue', 'statusValue'));
         } catch (\Exception $e) {
             return $this->handleException($e);
         }
@@ -68,15 +74,22 @@ class MenuController extends Controller
                 $menu->role_id = implode(',', $roleIds);
             }
 
-            // Ambil daftar permission untuk select
-            $permissions = \Spatie\Permission\Models\Permission::pluck('name', 'id');
-
             $parentMenus = Menu::whereNull('parent_id')
                 ->where('id', '!=', $id)
                 ->orderBy('order')
                 ->pluck('name', 'id');
+                
+            // Handle roles value for TomSelect
+            $rolesValue = old('roles');
+            if ($rolesValue === null && isset($menu->roles)) {
+                $rolesValue = is_array($menu->roles) ? $menu->roles : [];
+            }
+            $rolesValue = $rolesValue ?? [];
+            
+            // Handle status value for TomSelect
+            $statusValue = old('is_active', $menu->is_active ?? '');
 
-            return view('admin.menus.Form', compact('menu', 'parentMenus', 'permissions'));
+            return view('admin.menus.Form', compact('menu', 'parentMenus', 'rolesValue', 'statusValue'));
         } catch (\Exception $e) {
             return $this->handleException($e);
         }

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->index('name'); // Untuk search by name
             $table->index('url'); // Untuk search by URL
             $table->index('permission'); // Untuk filter by permission
-            $table->index('roles'); // Untuk filter by roles
+            // Note: JSON columns cannot be indexed directly in MySQL
             $table->index(['is_active', 'parent_id', 'order']); // Composite index untuk sidebar query
         });
     }

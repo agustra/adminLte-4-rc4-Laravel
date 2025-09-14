@@ -36,7 +36,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     @component('components.forms.input', [
                         'label' => 'Menu URL',
                         'name' => 'menu_url',
@@ -52,10 +52,11 @@
                     <small class="text-muted">Contoh: <code>/admin/users</code>, <code>/dashboard</code></small>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <div class="form-group">
-                        <label for="model_class">📦 Model Class</label>
-                        <select class="form-select" id="model_class_select" onchange="toggleModelInput()">
+                        <label for="model_class" class="mb-2">📦 Model Class</label>
+                        <select class="form-select form-select-sm" id="model_class_select"
+                            onchange="toggleModelInput()">
                             <option value="">-- Pilih Model --</option>
                             @foreach ($availableModels as $class => $name)
                                 <option value="{{ $class }}"
@@ -102,62 +103,17 @@
                     });
                 </script>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="date_fields">📅 Date Fields</label>
-                        @php
-                            $currentFields = old(
-                                'date_fields',
-                                $config->date_field
-                                    ? (is_array($config->date_field)
-                                        ? $config->date_field
-                                        : explode(',', $config->date_field))
-                                    : ['created_at'],
-                            );
-                        @endphp
-
-                        <select class="form-select date-fields-select" name="date_fields[]" id="date_fields"
-                            data-placeholder="Pilih atau ketik field tanggal..." multiple>
-                            @foreach (['created_at', 'updated_at', 'deleted_at', 'published_at', 'start_date', 'end_date', 'date', 'birth_date', 'hire_date'] as $field)
-                                <option value="{{ $field }}"
-                                    {{ in_array($field, $currentFields) ? 'selected' : '' }}>
-                                    {{ $field }}
-                                </option>
-                            @endforeach
-                            @foreach ($currentFields as $field)
-                                @if (
-                                    !in_array($field, [
-                                        'created_at',
-                                        'updated_at',
-                                        'deleted_at',
-                                        'published_at',
-                                        'start_date',
-                                        'end_date',
-                                        'date',
-                                        'birth_date',
-                                        'hire_date',
-                                    ]))
-                                    <option value="{{ $field }}" selected>{{ $field }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-
-                        <small class="text-muted">Pilih atau ketik field tanggal yang akan dihitung untuk badge. Bisa
-                            multiple field.</small>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <x-forms.tomSelect label="Date Fields" id="date_fields" name="date_fields" :useEmoji="true"
+                        emoji="📅" :value="$currentFields" :multiple="true" :options="$dateFieldOptions" />
+                    <small class="text-muted">Pilih atau ketik field tanggal yang akan dihitung untuk badge. Bisa
+                        multiple field.</small>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="is_active">✅ Status</label>
-                        <select class="form-select" id="is_active" name="is_active">
-                            <option value="1"
-                                {{ old('is_active', $config->is_active ?? true) ? 'selected' : '' }}>Active</option>
-                            <option value="0"
-                                {{ old('is_active', $config->is_active ?? true) ? '' : 'selected' }}>Inactive</option>
-                        </select>
-                        <small class="text-muted">Status aktif/nonaktif badge</small>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <x-forms.tomSelect label="Status" id="is_active" name="is_active" :useEmoji="true" emoji="📊"
+                        value="{{ $statusValue }}" :options="[1 => '✅ Active', 0 => '❌ Inactive']" />
+                    <small class="text-muted">Status aktif/nonaktif badge</small>
                 </div>
 
                 <div class="col-md-12">

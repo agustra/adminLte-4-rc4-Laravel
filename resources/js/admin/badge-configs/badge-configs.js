@@ -12,6 +12,9 @@ import filterData from "@helpers/filterData.js";
 import DateRangePicker from "@helpers/DateRangePicker.js";
 import { formatDate, getTodayString } from "@utils/formatDate.js";
 
+// Import TomSelect CSS saja (ringan)
+import "tom-select/dist/css/tom-select.bootstrap5.css";
+
 // ============================
 // Constants
 // ============================
@@ -326,73 +329,74 @@ document.addEventListener("shown.bs.modal", async (e) => {
 
     (async () => {
         try {
-            // ---- 1. Sisipkan CSS TomSelect (theme Bootstrap 5) hanya sekali ----
-            if (!document.querySelector("link[data-tomselect]")) {
-                const link = document.createElement("link");
-                link.rel = "stylesheet";
-                link.href =
-                    "https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.css";
-                link.dataset.tomselect = "true";
-                document.head.appendChild(link);
-            }
+            // ---- 1. Import CSS TomSelect (sudah di-handle oleh Vite) ----
+            // CSS akan di-import di app.js atau component yang membutuhkan
 
-            // ---- 2. Load library JS TomSelect dari CDN ----
-            await import(
-                "https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"
-            );
+            // ---- 2. Dynamic import TomSelect saat dibutuhkan ----
+            const tomSelectModule = await import("tom-select");
+            // Handle berbagai format export
+            const TomSelect =
+                tomSelectModule.default ||
+                tomSelectModule.TomSelect ||
+                tomSelectModule;
 
             // ---- 3. Inisialisasi setelah lib siap ----
-            const dateFieldsElement = modal.querySelector(".date-fields-select");
+            const dateFieldsElement = modal.querySelector("#date_fields");
             if (dateFieldsElement && !dateFieldsElement.tomselect) {
                 new TomSelect(dateFieldsElement, {
                     create: true,
                     maxItems: null, // null = multiple tanpa batas
                     placeholder: "Pilih atau ketik field tanggal...",
-                    
+
                     // Callback saat user create item baru
-                    onCreate: function(input, callback) {
+                    onCreate: function (input, callback) {
                         // Validasi input (opsional)
                         if (!input || input.trim().length < 2) {
                             callback();
                             return;
                         }
-                        
+
                         const newField = input.trim();
-                        
+
                         // Bisa tambah validasi format field name
                         if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(newField)) {
-                            showToast('Field name harus format valid (contoh: created_at, registration_date)', 'error');
+                            showToast(
+                                "Field name harus format valid (contoh: created_at, registration_date)",
+                                "error"
+                            );
                             callback();
                             return;
                         }
-                        
+
                         // Create item baru
                         callback({
                             value: newField,
-                            text: newField
+                            text: newField,
                         });
-                        
+
                         // Custom field akan tersimpan saat form di-save
-                        
-                        showToast(`Field '${newField}' berhasil ditambahkan`, 'success');
+
+                        showToast(
+                            `Field '${newField}' berhasil ditambahkan`,
+                            "success"
+                        );
                     },
-                    
+
                     // Render option
                     render: {
-                        option: function(data, escape) {
+                        option: function (data, escape) {
                             return `<div>${escape(data.text)}</div>`;
                         },
-                        item: function(data, escape) {
+                        item: function (data, escape) {
                             return `<div>${escape(data.text)}</div>`;
-                        }
-                    }
+                        },
+                    },
                 });
             }
         } catch (error) {
             console.error("Error loading select:", error);
         }
     })();
-
 });
 
 // Start Application
@@ -403,7 +407,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Export default function untuk dynamic loading
 export default function initBadgeConfigsModule() {
-
     if (document.readyState === "loading") {
         return;
     } else {

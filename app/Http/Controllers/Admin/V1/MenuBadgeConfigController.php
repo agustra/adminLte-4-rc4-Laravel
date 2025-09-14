@@ -33,8 +33,25 @@ class MenuBadgeConfigController extends Controller
             $config = new MenuBadgeConfig;
             $availableModels = MenuBadgeConfig::getAvailableModels();
             $permissions = Permission::all();
+            
+            // Handle status value for TomSelect
+            $statusValue = '';
+            
+            // Handle date fields for select
+            $currentFields = old('date_fields', ['created_at']);
+            $dateFieldOptions = [
+                'created_at' => 'created_at',
+                'updated_at' => 'updated_at', 
+                'deleted_at' => 'deleted_at',
+                'published_at' => 'published_at',
+                'start_date' => 'start_date',
+                'end_date' => 'end_date',
+                'date' => 'date',
+                'birth_date' => 'birth_date',
+                'hire_date' => 'hire_date'
+            ];
 
-            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions'));
+            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions', 'statusValue', 'currentFields', 'dateFieldOptions'));
         } catch (\Throwable $e) {
             return $this->handleException($e);
         }
@@ -48,8 +65,36 @@ class MenuBadgeConfigController extends Controller
             $config = MenuBadgeConfig::findOrFail($id);
             $availableModels = MenuBadgeConfig::getAvailableModels();
             $permissions = Permission::all();
+            
+            // Handle status value for TomSelect
+            $statusValue = old('is_active');
+            if ($statusValue === null && isset($config)) {
+                $statusValue = $config->is_active ? 1 : 0;
+            }
+            $statusValue = $statusValue ?? 1;
+            
+            // Handle date fields for select
+            $currentFields = old(
+                'date_fields',
+                $config->date_field
+                    ? (is_array($config->date_field)
+                        ? $config->date_field
+                        : explode(',', $config->date_field))
+                    : ['created_at']
+            );
+            $dateFieldOptions = [
+                'created_at' => 'created_at',
+                'updated_at' => 'updated_at', 
+                'deleted_at' => 'deleted_at',
+                'published_at' => 'published_at',
+                'start_date' => 'start_date',
+                'end_date' => 'end_date',
+                'date' => 'date',
+                'birth_date' => 'birth_date',
+                'hire_date' => 'hire_date'
+            ];
 
-            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions'));
+            return view('admin.badge-configs.Form', compact('config', 'availableModels', 'permissions', 'statusValue', 'currentFields', 'dateFieldOptions'));
         } catch (\Throwable $e) {
             return $this->handleException($e);
         }
