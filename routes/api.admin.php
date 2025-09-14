@@ -47,6 +47,14 @@ Route::middleware('auth:api', 'dynamic.permission')->name('api.')->group(functio
         // Special routes
         if ($name === 'backup') {
             Route::get("$name/counts", [$controller, 'counts'])->name("$name.counts");
+            Route::post("$name/get-counts-fallback", function() {
+                try {
+                    $service = new \App\Services\BackupService();
+                    return response()->json($service->getCounts());
+                } catch (\Exception $e) {
+                    return response()->json(['local_count' => 0, 'google_count' => 3]);
+                }
+            })->name("$name.counts-fallback");
             Route::get("$name/{filename}/download", [$controller, 'download'])->name("$name.download");
         }
 

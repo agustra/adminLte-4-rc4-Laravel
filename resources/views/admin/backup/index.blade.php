@@ -61,4 +61,26 @@
 @endsection
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    {{-- <script>
+        // Test API endpoints
+        console.log('🧪 Testing backup endpoints...');
+
+        // Test actual counts endpoint
+        axios.get('/api/backup-counts', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    )?.content,
+                },
+            })
+            .then(function(response) {
+                console.log('✅ Counts API Response:', response.data);
+            })
+            .catch(function(error) {
+                console.error('❌ Counts API Error:', error);
+            });
+    </script> --}}
 @endsection

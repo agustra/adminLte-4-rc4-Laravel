@@ -19,10 +19,17 @@ function createAxiosClient() {
     // Interceptor untuk menambahkan token setiap request
     axiosClient.interceptors.request.use(
         (config) => {
-            const token = localStorage.getItem("token");
+            // Try multiple possible token keys
+            const token = localStorage.getItem("access_token") || 
+                         localStorage.getItem("token") || 
+                         localStorage.getItem("auth_token");
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
+            
+            // Ensure credentials are included for session-based auth
+            config.withCredentials = true;
+            
             return config;
         },
         (error) => Promise.reject(error)

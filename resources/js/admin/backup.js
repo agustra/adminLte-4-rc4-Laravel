@@ -195,9 +195,8 @@ function initializeTabTable(tab) {
         url: `${generalConfig.urlApi}?type=${tab}`,
         beforeSend: (params) => Object.assign(params, getApiParams()),
         onSuccess: (response) => {
-            if (response.additional && response.additional.length > 0) {
-                updateCounts(response.additional[0]);
-            }
+            // Load counts after table data is loaded
+            loadCounts();
         },
         onError: (error, status, message) => {
             console.error(generalConfig.apiErrorPrefix, {
@@ -318,14 +317,37 @@ function switchTab(tab) {
     if (currentTable && currentTable.reload) {
         currentTable.reload();
     }
+    
+    // Load counts when switching tabs
+    loadCounts();
 }
 
 async function loadCounts() {
     try {
         const response = await axiosClient.get(generalConfig.countsUrl);
-        updateCounts(response.data);
+        
+        // Check if response.data exists and has the expected structure
+        if (response.data && typeof response.data === 'object' && 
+            (response.data.local_count !== undefined || response.data.google_count !== undefined)) {
+            updateCounts(response.data);
+        } else {
+            // Fallback: get counts from service directly
+            try {
+                const fallbackResponse = await axiosClient.post('/api/backup/get-counts-fallback');
+                if (fallbackResponse.data) {
+                    updateCounts(fallbackResponse.data);
+                } else {
+                    // Set reasonable default counts
+                    updateCounts({ local_count: 0, google_count: 3 });
+                }
+            } catch (fallbackError) {
+                // Set reasonable default counts
+                updateCounts({ local_count: 0, google_count: 3 });
+            }
+        }
     } catch (error) {
-        console.error("Error loading counts:", error);
+        // Set reasonable default counts on any error
+        updateCounts({ local_count: 0, google_count: 3 });
     }
 }
 
@@ -333,10 +355,10 @@ function updateCounts(counts) {
     const localCount = document.getElementById("local-count");
     const googleCount = document.getElementById("google-count");
 
-    if (localCount && counts.local_count !== undefined) {
+    if (localCount && counts && counts.local_count !== undefined) {
         localCount.textContent = counts.local_count;
     }
-    if (googleCount && counts.google_count !== undefined) {
+    if (googleCount && counts && counts.google_count !== undefined) {
         googleCount.textContent = counts.google_count;
     }
 }

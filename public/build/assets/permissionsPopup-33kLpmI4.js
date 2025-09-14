@@ -68,7 +68,7 @@ import{_ as b}from"./preload-helper-BfFHrpNk.js";function h(s,i,t="role"){if(!s|
                 </div>
             </div>
         </div>
-    `,e=document.getElementById("permissionsModal");e&&e.remove(),document.body.insertAdjacentHTML("beforeend",a),new bootstrap.Modal(document.getElementById("permissionsModal")).show(),await c(s,t,1,6),document.getElementById("permissionsModal").addEventListener("hidden.bs.modal",function(){this.remove()})}async function c(s,i,t,n){try{const{default:l}=await b(async()=>{const{default:o}=await import("./axiosClient-8LtfCK6A.js");return{default:o}},[]),a=i==="user"?`/api/users/${s}/permissions/paginated`:`/api/roles/${s}/permissions/paginated`,e=await l.get(a,{params:{page:t,limit:n}});g(e.data,t,n,s,i)}catch(l){console.error("Error loading permissions:",l),document.getElementById("permissionsContent").innerHTML=`
+    `,e=document.getElementById("permissionsModal");e&&e.remove(),document.body.insertAdjacentHTML("beforeend",a),new bootstrap.Modal(document.getElementById("permissionsModal")).show(),await c(s,t,1,6),document.getElementById("permissionsModal").addEventListener("hidden.bs.modal",function(){this.remove()})}async function c(s,i,t,n){try{const{default:l}=await b(async()=>{const{default:o}=await import("./axiosClient-DXQnQ5LA.js");return{default:o}},[]),a=i==="user"?`/api/users/${s}/permissions/paginated`:`/api/roles/${s}/permissions/paginated`,e=await l.get(a,{params:{page:t,limit:n}});g(e.data,t,n,s,i)}catch(l){console.error("Error loading permissions:",l),document.getElementById("permissionsContent").innerHTML=`
             <div class="text-center p-4 text-danger">
                 <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
                 <div>Error loading permissions</div>

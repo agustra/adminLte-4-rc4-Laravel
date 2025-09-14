@@ -24,4 +24,9 @@ class BackupController extends Controller
             return $this->handleException($e);
         }
     }
+
+    public function show()
+    {
+        return false;
+    }
 }

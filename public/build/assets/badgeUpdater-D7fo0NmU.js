@@ -1,0 +1,7 @@
+import c from"./axiosClient-DXQnQ5LA.js";async function u(n){try{await c.post("/api/menu/clear-badge-cache",{url:n});const e=await c.get("/api/menu/badge-count",{params:{url:n}});if(e.data.success){const{count:o,color:t}=e.data;m(n,o,t)}}catch(e){console.error("❌ Error updating menu badge:",e)}}function m(n,e,o){let t=document.querySelector(`a.nav-link[href="${n}"]`);if(!t){const a=window.location.origin+n;t=document.querySelector(`a.nav-link[href="${a}"]`)}if(!t){const a=n.split("/").pop(),s=document.querySelectorAll("a.nav-link");t=Array.from(s).find(l=>l.textContent.toLowerCase().trim().includes(a))}if(!t)return;const r=t.querySelector("p");if(!r)return;const i=r.querySelector(".badge");if(i&&i.remove(),e>0){const a=document.createElement("span");a.className=`badge bg-${o} ms-auto`,a.textContent=e;const s=r.querySelector(".nav-arrow");s?(a.classList.add("me-2"),r.insertBefore(a,s)):r.appendChild(a),a.style.animation="badgeUpdate 0.3s ease-in-out"}}async function g(n){try{const e=await c.get("/api/menu/all-badge-counts");if(e.data.success){const o=e.data.badges;Object.keys(o).forEach(t=>{setTimeout(()=>{u(t)},500)})}}catch{}}const d=document.createElement("style");d.textContent=`
+    @keyframes badgeUpdate {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+`;document.head.appendChild(d);export{g as a};

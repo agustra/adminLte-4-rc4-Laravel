@@ -109,6 +109,11 @@ class BackupApiController extends Controller
         }
     }
 
+    public function show()
+    {
+        return false;
+    }
+
     public function destroy($filename, Request $request)
     {
         $this->authorize('delete ' . $this->authorizeAction, 'web');
@@ -150,7 +155,9 @@ class BackupApiController extends Controller
 
             $result = $this->backupService->getCounts();
 
-            return response()->json($result);
+            return response()->json($result, 200, [
+                'Content-Type' => 'application/json'
+            ]);
         } catch (\Throwable $e) {
             return $this->handleException($e);
         }
