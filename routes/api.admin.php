@@ -80,5 +80,7 @@ Route::middleware('auth:api', 'dynamic.permission')->group(
         // Badge Config Routes
         Route::get('/badge-configs/models', [MenuBadgeConfigApiController::class, 'getAvailableModels'])->name('badge-configs.models');
         Route::get('/badge-configs/model-fields', [MenuBadgeConfigApiController::class, 'getModelFields'])->name('badge-configs.model-fields');
+
+
     }
 );

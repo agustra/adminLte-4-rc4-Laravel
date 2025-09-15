@@ -17,10 +17,12 @@ class UserResource extends JsonResource
             'name' => ucfirst($this->name),
             'email' => $this->email,
             'avatar_url' => $this->profile_photo_path
-                ? (str_starts_with($this->profile_photo_path, 'media/')
-                    ? url('/'.$this->profile_photo_path)
-                    : url('/media/'.$this->profile_photo_path))
-                : url('/media/avatars/avatar-default.webp'),
+                ? (str_starts_with($this->profile_photo_path, 'http')
+                    ? $this->profile_photo_path
+                    : (str_starts_with($this->profile_photo_path, '/storage/')
+                        ? url($this->profile_photo_path)
+                        : asset('storage/'.$this->profile_photo_path)))
+                : asset('storage/filemanager/images/public/avatar-default.webp'),
             'roles' => $this->whenLoaded('roles', function () {
                 return $this->roles->map(function ($role) {
                     return ['id' => $role->id, 'name' => $role->name];

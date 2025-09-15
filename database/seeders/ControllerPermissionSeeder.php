@@ -92,32 +92,7 @@ class ControllerPermissionSeeder extends Seeder
             ['controller' => 'SettingsController', 'method' => 'update', 'permissions' => ['edit settings']],
             ['controller' => 'SettingsController', 'method' => 'destroy', 'permissions' => ['delete settings']],
 
-            // MediaController (Web)
-            ['controller' => 'MediaController', 'method' => 'index', 'permissions' => ['read media']],
-            ['controller' => 'MediaController', 'method' => 'show', 'permissions' => ['show media']],
-            ['controller' => 'MediaController', 'method' => 'getModal', 'permissions' => ['read media']],
 
-            // MediaController (API)
-            ['controller' => 'MediaController', 'method' => 'uploadFile', 'permissions' => ['create media']],
-            ['controller' => 'MediaController', 'method' => 'uploadAvatar', 'permissions' => ['create media']],
-            ['controller' => 'MediaController', 'method' => 'deleteAvatar', 'permissions' => ['delete media']],
-
-            // MediaManagementController
-            ['controller' => 'MediaManagementController', 'method' => 'json', 'permissions' => ['read media']],
-            ['controller' => 'MediaManagementController', 'method' => 'update', 'permissions' => ['edit media']],
-            ['controller' => 'MediaManagementController', 'method' => 'destroy', 'permissions' => ['delete media']],
-            ['controller' => 'MediaManagementController', 'method' => 'deleteMultiple', 'permissions' => ['delete media']],
-
-            // MediaOperationsController
-            ['controller' => 'MediaOperationsController', 'method' => 'copy', 'permissions' => ['edit media']],
-            ['controller' => 'MediaOperationsController', 'method' => 'move', 'permissions' => ['edit media']],
-            ['controller' => 'MediaOperationsController', 'method' => 'deleteFolder', 'permissions' => ['delete media']],
-
-            // FolderController
-            ['controller' => 'FolderController', 'method' => 'index', 'permissions' => ['read media']],
-            ['controller' => 'FolderController', 'method' => 'store', 'permissions' => ['create media']],
-            ['controller' => 'FolderController', 'method' => 'move', 'permissions' => ['edit media']],
-            ['controller' => 'FolderController', 'method' => 'rename', 'permissions' => ['edit media']],
 
             // BackupController
             ['controller' => 'BackupController', 'method' => 'index', 'permissions' => ['read backup']],

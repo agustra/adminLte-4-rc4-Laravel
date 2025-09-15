@@ -133,7 +133,7 @@ function createTableConfig() {
                 searchable: false,
                 render: (data, type, row) => {
                     const avatarUrl =
-                        row.avatar_url || "/avatar/avatar-default.jpg";
+                        row.avatar_url || "/storage/filemanager/images/public/avatar-default.webp";
                     return `<img src="${avatarUrl}" alt="Avatar" width="40" height="40" style="border-radius: 50%;">`;
                 },
             },

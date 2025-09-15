@@ -10,7 +10,7 @@ import "toastify-js/src/toastify.css";
 
 // Import axios and make it globally available
 import axios from "axios";
-window.axios = axios;
+window.axios = axios; 
 
 // ===== LAST VISITED PAGE TRACKER =====
 // Simpan URL terakhir, kecuali halaman auth dan root

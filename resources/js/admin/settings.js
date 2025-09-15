@@ -1,4 +1,3 @@
-import { MediaLibrary } from "../media/MediaLibrary.js";
 import axiosClient from "@api/axiosClient.js";
 
 console.log("⚙️ Settings module loading...");
@@ -28,7 +27,7 @@ setTimeout(() => {
 // Initialize settings page
 function initializeSettings() {
     initializeSettingsForm();
-    initializeMediaPicker();
+    initializeFileManagerPicker();
 }
 
 // Initialize settings form
@@ -44,13 +43,95 @@ function initializeSettingsForm() {
 }
 
 // Global functions (available immediately)
-window.openMediaPicker = function (fieldName) {
-    window.currentMediaField = fieldName;
-    openMediaLibrary({
-        inputId: fieldName,
-        previewId: fieldName + "_preview",
-    });
+window.openFileManager = function (fieldName) {
+    console.log('🔍 Opening FileManager for field:', fieldName);
+    window.currentInputId = fieldName;
+    
+    // Open FileManager popup for system images (public folder)
+    const popup = window.open(
+        '/admin/system-filemanager?type=image',
+        'FileManager',
+        'width=1000,height=700,scrollbars=yes,resizable=yes'
+    );
+    
+    console.log('📂 FileManager popup opened:', popup);
+    
+    // Check if popup opened successfully
+    if (!popup || popup.closed) {
+        console.error('❌ Failed to open FileManager popup');
+        showToast('Failed to open FileManager. Please check popup blocker.', 'error');
+        return;
+    }
+    
+    // Listen for file selection from FileManager
+    window.SetUrl = function(urls, file_path) {
+        console.log('📁 FileManager callback received:', { urls, file_path });
+        
+        // Handle FileManager object format
+        const fileObj = Array.isArray(urls) ? urls[0] : urls;
+        const url = fileObj?.url || fileObj;
+        console.log('🔗 File object:', fileObj);
+        console.log('🔗 Extracted URL:', url);
+        
+        const inputElement = document.getElementById(window.currentInputId);
+        console.log('🎯 Target input element:', inputElement);
+        
+        if (inputElement && url) {
+            // Extract file path from URL
+            let finalPath = file_path;
+            if (!finalPath && url) {
+                // Extract path from URL: /storage/filemanager/images/public/logo.png
+                const urlParts = url.split('/storage/');
+                if (urlParts.length > 1) {
+                    finalPath = urlParts[1];
+                }
+            }
+            
+            console.log('📂 Final path to save:', finalPath);
+            
+            // Set the file path
+            inputElement.value = finalPath || url;
+            console.log('✅ Input value set to:', inputElement.value);
+            
+            // Update preview with full URL
+            updateLogoPreview(window.currentInputId, url);
+            
+            // Close popup
+            popup.close();
+            
+            // Clear stored input ID
+            delete window.currentInputId;
+            
+            showToast('Logo selected successfully', 'success');
+        } else {
+            console.error('❌ Missing data:', { inputElement, url, fileObj });
+        }
+    };
 };
+
+function updateLogoPreview(inputId, url) {
+    console.log('🖼️ Updating preview for:', inputId, 'with URL:', url);
+    
+    const previewDiv = document.getElementById(inputId + '_preview');
+    console.log('🎯 Preview div found:', previewDiv);
+    
+    if (previewDiv) {
+        if (url) {
+            previewDiv.innerHTML = `
+                <img src="${url}" alt="Logo Preview" class="img-thumbnail" style="max-height: 100px;">
+                <div class="mt-1">
+                    <small class="text-muted">Selected: ${url.split('/').pop()}</small>
+                </div>
+            `;
+            console.log('✅ Preview updated with image');
+        } else {
+            previewDiv.innerHTML = '<small class="text-muted">No logo selected</small>';
+            console.log('⚠️ Preview cleared - no URL provided');
+        }
+    } else {
+        console.error('❌ Preview div not found:', inputId + '_preview');
+    }
+}
 
 window.submitForm = async function (event) {
     event.preventDefault();
@@ -101,130 +182,10 @@ window.submitForm = async function (event) {
     }
 };
 
-// Initialize media picker
-function initializeMediaPicker() {
-    // Media picker is already initialized globally above
-    console.log("📷 Media picker ready");
-}
-
-async function openMediaLibrary(config) {
-    try {
-        const response = await axiosClient.get("/media-library/modal", {
-            headers: {
-                Accept: "text/html",
-            },
-        });
-
-        const modalContainer = document.createElement("div");
-        modalContainer.innerHTML = response.data;
-        document.body.appendChild(modalContainer);
-
-        const modal = modalContainer.querySelector(".modal");
-        if (modal) {
-            const modalInstance = new bootstrap.Modal(modal);
-            modalInstance.show();
-
-            // Wait for modal to be fully shown
-            modal.addEventListener("shown.bs.modal", function () {
-                if (typeof MediaLibrary !== "undefined") {
-                    new MediaLibrary();
-                }
-                setupMediaSelection(modal, config, modalInstance);
-            });
-
-            modal.addEventListener("hidden.bs.modal", function () {
-                document.body.removeChild(modalContainer);
-            });
-        }
-    } catch (error) {
-        console.error("Error loading media modal:", error);
-        showToast("Failed to load media library", "error");
-    }
-}
-
-function setupMediaSelection(modal, config, modalInstance) {
-    const selectBtn = modal.querySelector("#selectMediaForSettings");
-    let selectedMedia = null;
-
-    function attachMediaItemListeners() {
-        const mediaItems = modal.querySelectorAll(
-            ".media-item:not(.folder-item)"
-        );
-
-        mediaItems.forEach(function (item) {
-            if (!item.hasAttribute("data-settings-listener")) {
-                item.setAttribute("data-settings-listener", "true");
-                item.addEventListener("click", function (e) {
-                    if (
-                        e.target.closest("button") ||
-                        e.target.type === "checkbox"
-                    )
-                        return;
-
-                    mediaItems.forEach(function (i) {
-                        i.classList.remove("selected");
-                    });
-                    item.classList.add("selected");
-
-                    selectedMedia = {
-                        id: item.dataset.id,
-                        url: item.dataset.url || item.querySelector("img")?.src,
-                        name:
-                            item.dataset.name || item.querySelector("img")?.alt,
-                    };
-
-                    if (selectBtn) selectBtn.disabled = false;
-                });
-            }
-        });
-    }
-
-    // Attach listeners to existing items
-    setTimeout(attachMediaItemListeners, 1000);
-
-    // Observer for new items
-    const observer = new MutationObserver(attachMediaItemListeners);
-    const mediaGrid = modal.querySelector("#mediaGrid");
-    if (mediaGrid) {
-        observer.observe(mediaGrid, { childList: true, subtree: true });
-    }
-
-    if (selectBtn) {
-        selectBtn.addEventListener("click", function () {
-            if (selectedMedia) {
-                handleMediaSelection(selectedMedia, config);
-                modalInstance.hide();
-            }
-        });
-    }
-}
-
-function handleMediaSelection(selectedMedia, config) {
-    const input = document.getElementById(config.inputId);
-    const previewContainer = document.getElementById(config.previewId);
-
-    if (selectedMedia && selectedMedia.url) {
-        // Extract filename from URL
-        let cleanFilename = selectedMedia.name;
-        if (selectedMedia.url) {
-            const urlParts = selectedMedia.url.split("/media/");
-            if (urlParts.length > 1) {
-                cleanFilename = urlParts[1];
-            }
-        }
-
-        // Update input field
-        if (input) {
-            input.value = cleanFilename;
-        }
-
-        // Update preview
-        if (previewContainer) {
-            previewContainer.innerHTML = `<img src="${selectedMedia.url}" alt="Preview" class="img-thumbnail" style="max-height: 100px;">`;
-        }
-
-        showToast("Media selected successfully", "success");
-    }
+// Initialize FileManager picker
+function initializeFileManagerPicker() {
+    // FileManager picker is already initialized globally above
+    console.log("📁 FileManager picker ready");
 }
 
 // Initialize when DOM is ready
@@ -235,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Export functions
-export { initializeSettings, openMediaLibrary };
+export { initializeSettings };
 
 // Export default function untuk dynamic loading
 export default function initSettingsModule() {

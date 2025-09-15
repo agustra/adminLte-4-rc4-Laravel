@@ -62,13 +62,6 @@
       0 => 'Spatie\\Backup\\BackupServiceProvider',
     ),
   ),
-  'spatie/laravel-medialibrary' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\MediaLibrary\\MediaLibraryServiceProvider',
-    ),
-  ),
   'spatie/laravel-menu' => 
   array (
     'aliases' => 
@@ -96,6 +89,16 @@
     'providers' => 
     array (
       0 => 'Spatie\\SignalAwareCommand\\SignalAwareCommandServiceProvider',
+    ),
+  ),
+  'unisharp/laravel-filemanager' => 
+  array (
+    'aliases' => 
+    array (
+    ),
+    'providers' => 
+    array (
+      0 => 'UniSharp\\LaravelFilemanager\\LaravelFilemanagerServiceProvider',
     ),
   ),
 );

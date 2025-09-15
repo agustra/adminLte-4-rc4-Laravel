@@ -18,7 +18,7 @@ class SettingSeeder extends Seeder
             // Application Settings
             ['key' => 'app_name', 'value' => 'AdminLTE Laravel'],
             ['key' => 'app_description', 'value' => 'Modern Admin Dashboard with Laravel & AdminLTE'],
-            ['key' => 'app_logo', 'value' => 'settings/AdminLTELogo.png'],
+            ['key' => 'app_logo', 'value' => 'filemanager/images/public/AdminLTELogo.png'],
             ['key' => 'app_version', 'value' => '1.0.0'],
 
             // Company Information

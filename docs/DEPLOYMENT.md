@@ -122,7 +122,6 @@ EXIT;
 # Run migrations
 php artisan migrate --force
 php artisan db:seed --force
-php artisan passport:install --force
 ```
 
 #### 6. Optimize Application

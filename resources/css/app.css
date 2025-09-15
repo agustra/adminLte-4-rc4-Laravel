@@ -1,18 +1,18 @@
 /**
- * AdminLTE Laravel Application - Global Styles
+ * Aplikasi AdminLTE Laravel - Gaya Global
  * 
- * This file contains centralized CSS for the entire application.
- * Tailwind CSS has been removed in favor of AdminLTE + Bootstrap 5.
+ * File ini berisi CSS terpusat untuk seluruh aplikasi.
+ * Tailwind CSS telah dihapus dan diganti dengan AdminLTE + Bootstrap 5.
  */
 
 /* ==========================================================================
-   BADGE SYSTEM
+   SISTEM BADGE
    ========================================================================== */
 /**
- * Custom badge-pill styling for status indicators, categories, and labels.
- * Used throughout the application for consistent badge appearance.
+ * Gaya badge-pill khusus untuk indikator status, kategori, dan label.
+ * Digunakan di seluruh aplikasi untuk tampilan badge yang konsisten.
  * 
- * Usage: <span class="badge-pill bg-success-light">Active</span>
+ * Penggunaan: <span class="badge-pill bg-success-light">Aktif</span>
  */
 .badge-pill {
     padding: 0.25em 0.6em; /* Comfortable padding for readability */
@@ -23,13 +23,13 @@
 }
 
 /* ==========================================================================
-   COLOR SYSTEM
+   SISTEM WARNA
    ========================================================================== */
 /**
- * Custom color palette for consistent branding across the application.
- * Light variants provide better contrast and readability.
+ * Palet warna khusus untuk branding yang konsisten di seluruh aplikasi.
+ * Varian terang memberikan kontras dan keterbacaan yang lebih baik.
  * 
- * Usage: <div class="bg-violet">Content</div>
+ * Penggunaan: <div class="bg-violet">Konten</div>
  */
 .bg-violet {
     background: #f3e5f5;
@@ -48,9 +48,14 @@
     color: #1976d2;
 } /* Light blue for info/primary */
 .bg-danger-light {
-    background: #ffebee;
-    color: #c62828;
+    background: #ffebee !important;
+    color: #c62828 !important;
 } /* Light red for errors/inactive */
+
+.bg-kuning {
+    background: #fdbe33 !important;
+    color: #111827 !important;
+} /* Kuning untuk peringatan atau status pending */
 
 /* ==========================================================================
    DARK MODE
@@ -59,10 +64,10 @@
  * Custom color 
  */
 /* --- Dark mode --- */
-[data-bs-theme="dark"] .gradient-card {
+/* [data-bs-theme="dark"] .card .bg-kuning {
     background: linear-gradient(45deg, #1f2937, #111827);
     color: #f9fafb;
-}
+} */
 
 /* ==========================================================================
    GRID VIEW SYSTEM

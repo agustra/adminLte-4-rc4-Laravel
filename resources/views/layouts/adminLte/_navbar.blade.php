@@ -19,7 +19,8 @@
             <li class="nav-item dropdown idfiltertgl mt-1 me-2" id="idSingleDate"></li>
 
             <li class="nav-item dropdown mt-1">
-                <select id="theme-dropdown" class="form-select form-select-sm" style="width: auto; border: none; background: transparent;">
+                <select id="theme-dropdown" class="form-select form-select-sm"
+                    style="width: auto; border: none; background: transparent;">
                     <option value="light">☀️ Light</option>
                     <option value="dark">🌙 Dark</option>
                     <option value="system">🔄 Auto</option>
@@ -50,18 +51,22 @@
                     <li class="user-header text-bg-primary"> <img src="{{ $imageSrc }}"
                             class="rounded-circle shadow" alt="User Image">
                         <p>
-                            {{ Ucfirst(Auth::user()->name) }} - Web Developer
-                            <small>Member since Nov. 2023</small>
+                            {{ Ucfirst(Auth::user()->name) }} - {{ Auth::user()->getRoleNames()->first() ?? 'User' }}
+                            <small>Member since {{ Auth::user()->created_at->format('M Y') }}</small>
                         </p>
                     </li> <!--end::User Image--> <!--begin::Menu Body-->
                     <li class="user-body"> <!--begin::Row-->
                         <div class="row">
-                            <div class="col-4 text-center"> <a href="#">Followers</a> </div>
-                            <div class="col-4 text-center"> <a href="#">Sales</a> </div>
-                            <div class="col-4 text-center"> <a href="#">Friends</a> </div>
+                            <div class="col-4 text-center"> <a href="{{ route('user.filemanager.index') }}"
+                                    style="white-space: nowrap; font-size: 0.9em;">My Media</a> </div>
+                            <div class="col-4 text-center"> <a href="#"
+                                    style="white-space: nowrap; font-size: 0.9em;">Sales</a> </div>
+                            <div class="col-4 text-center"> <a href="#"
+                                    style="white-space: nowrap; font-size: 0.9em;">Friends</a> </div>
                         </div> <!--end::Row-->
                     </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
-                    <li class="user-footer"> <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    <li class="user-footer"> <a href="{{ route('profile.index') }}"
+                            class="btn btn-default btn-flat">Profile</a>
                         <a href="#" class="btn btn-default btn-flat float-end"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             Signout

@@ -35,9 +35,9 @@ class SettingController extends Controller
 
             foreach ($data as $key => $value) {
                 if (! empty($value) || $value === '0') {
-                    // Handle MediaPicker URLs for logo fields
-                    if (in_array($key, ['app_logo', 'nota_logo']) && filter_var($value, FILTER_VALIDATE_URL)) {
-                        $value = $this->extractFilename($value);
+                    // Handle FileManager paths for logo fields
+                    if (in_array($key, ['app_logo', 'nota_logo'])) {
+                        $value = $this->processLogoPath($value);
                     }
 
                     Setting::updateOrCreate(['key' => $key], ['value' => $value]);
@@ -52,16 +52,31 @@ class SettingController extends Controller
         }
     }
 
-    private function extractFilename($url): string
+    private function processLogoPath($path): string
     {
-        $relativePath = str_replace(url('/'), '', $url);
-        $relativePath = ltrim($relativePath, '/');
-
-        // If file is already in settings folder, just use filename
-        if (str_starts_with($relativePath, 'media/settings/')) {
-            return basename($relativePath);
+        if (empty($path)) {
+            return '';
         }
-
-        return basename(parse_url((string) $url, PHP_URL_PATH));
+        
+        // If it's a full URL, extract the path part
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            $path = parse_url($path, PHP_URL_PATH);
+            $path = ltrim($path, '/');
+        }
+        
+        // Remove 'storage/' prefix if present (since we'll add it in view)
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, 8);
+        }
+        
+        // Ensure path starts with filemanager/images/public/
+        if (!str_starts_with($path, 'filemanager/images/public/')) {
+            // If it's just a filename, assume it's in public folder
+            if (!str_contains($path, '/')) {
+                $path = 'filemanager/images/public/' . $path;
+            }
+        }
+        
+        return $path;
     }
 }

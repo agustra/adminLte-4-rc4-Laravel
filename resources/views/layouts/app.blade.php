@@ -11,11 +11,11 @@
     <script>
         // Global configuration
         window.APP_CONFIG = {
-            baseUrl: '{{ config("app.url") }}',
-            apiUrl: '{{ config("app.url") }}/api',
+            baseUrl: '{{ config('app.url') }}',
+            apiUrl: '{{ config('app.url') }}/api',
             csrfToken: '{{ csrf_token() }}'
         };
-        
+
         // Immediately invoked function to set the theme on initial load to prevent FOUC
         (function() {
             try {
@@ -27,11 +27,7 @@
 
     @include('layouts.adminLte._head')
 
-    {{-- Icons and notifications now bundled in app.js --}}
-
-    {{-- <link rel="stylesheet" href="{{ asset('css/custom-menu.css') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/media-upload.css') }}">
+    @vite('resources/css/app.css')
 
     @include('admin.menus.css')
 

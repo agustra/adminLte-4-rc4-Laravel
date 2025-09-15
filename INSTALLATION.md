@@ -46,16 +46,13 @@ DB_PASSWORD=your_password
 
 ### 5. Database Migration & Seeding
 
-```bash
+````bash
 # Run migrations
 php artisan migrate
 
 # Seed database with initial data
 php artisan db:seed
 
-# Generate Passport keys
-php artisan passport:install
-```
 
 ### 6. Build Assets
 
@@ -65,7 +62,7 @@ npm run dev
 
 # Production
 npm run build
-```
+````
 
 ### 7. Start Development Server
 
@@ -123,7 +120,7 @@ Password: password
 -   PHP >= 8.2
 -   Composer
 -   Node.js & NPM
--   MySQL/MariaDB
+-   MySQL/MariaDBn
 -   Git
 
 ## Production Deployment

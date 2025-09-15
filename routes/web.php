@@ -27,38 +27,34 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', fn () => redirect()->route('dashboard'));
 });
 
-// MEDIA LIBRARY ROUTES (Universal - not admin specific)
+
+
+// USER PROFILE & FILE MANAGER ROUTES
 Route::middleware(['auth'])->group(function () {
-    // Main media management page
-    Route::get('/media-library', [\App\Http\Controllers\MediaController::class, 'index'])
-        ->name('media.index');
-
-    // Media picker modal (used by settings, avatar, CKEditor)
-    Route::get('/media-library/modal', [\App\Http\Controllers\MediaController::class, 'getModal'])
-        ->name('media.modal');
-
-    // Media detail/show (needed for edit functionality)
-    Route::get('/media-library/{id}', [\App\Http\Controllers\MediaController::class, 'show'])
-        ->name('media.show');
-
-    // Media partials for reuse
-    Route::get('/media-library/partials/{partial}', function ($partial) {
-        $allowedPartials = [
-            'container',
-            'styles',
-            'media-grid',
-            'toolbar',
-            'navigation',
-            'upload-area',
-            'modals',
-        ];
-
-        if (! in_array($partial, $allowedPartials)) {
-            abort(404);
-        }
-
-        return view("media.partials.{$partial}");
-    })->name('media.partials');
+    // Profile routes
+    Route::get('/profile', [\App\Http\Controllers\Profile\ProfileController::class, 'index'])
+        ->name('profile.index');
+    Route::put('/profile', [\App\Http\Controllers\Profile\ProfileController::class, 'update'])
+        ->name('profile.update');
+    Route::put('/profile/password', [\App\Http\Controllers\Profile\ProfileController::class, 'updatePassword'])
+        ->name('profile.password.update');
+    
+    // File Manager routes
+    Route::get('/my-files', [\App\Http\Controllers\Profile\FileManagerController::class, 'index'])
+        ->name('user.filemanager.index');
+    Route::get('/my-files/popup', [\App\Http\Controllers\Profile\FileManagerController::class, 'popup'])
+        ->name('user.filemanager.popup');
+        
+    // Custom upload route for user FileManager (must be before Laravel FileManager routes)
+    Route::any('user-filemanager/upload', [\App\Http\Controllers\Profile\FileManagerUploadController::class, 'upload'])
+        ->middleware(['web', 'auth', 'permission:read filemanager'])
+        ->name('user.lfm.upload');
+    
+    // User-specific FileManager routes with private folders only (no shared access)
+    Route::group(['prefix' => 'user-filemanager', 'middleware' => ['web', 'auth', 'permission:read filemanager'], 'as' => 'user.lfm.'], function () {
+        // Other FileManager routes
+        \UniSharp\LaravelFilemanager\Lfm::routes();
+    });
 });
 
 // Include file routes admin

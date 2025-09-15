@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -71,17 +71,7 @@ class AppServiceProvider extends ServiceProvider
             // config(['app.active_theme' => $activeTheme]);
         }
 
-        Media::deleting(function (Media $media) {
-            $protectedFiles = [
-                'logo.webp',
-                'nota_logo.webp',
-                'avatar-default.webp',
-            ];
 
-            if (in_array($media->file_name, $protectedFiles)) {
-                return false; // Batalkan penghapusan
-            }
-        });
 
         // **BLADE DIRECTIVES FOR DYNAMIC PERMISSIONS**
         \Illuminate\Support\Facades\Blade::directive('dynamiccan', function ($expression) {

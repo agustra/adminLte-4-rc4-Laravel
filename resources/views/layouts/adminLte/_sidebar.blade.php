@@ -3,7 +3,7 @@
         <a href="{{ url('/dashboard') }}" class="brand-link">
             @php
                 $appLogo = config('settings.app_logo');
-                $logoUrl = $appLogo ? url('media/' . $appLogo) : asset('img/logo.png');
+                $logoUrl = $appLogo ? asset('storage/' . $appLogo) : asset('img/logo.png');
             @endphp
             <img src="{{ $logoUrl }}" alt="AdminLTE Logo"
                 class="brand-image opacity-75 shadow">

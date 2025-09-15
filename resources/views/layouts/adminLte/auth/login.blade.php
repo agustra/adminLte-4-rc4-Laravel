@@ -41,7 +41,7 @@
 
     <div class="img-circle elevation-2">
         <a href="javascript:void(0)">
-            <img src="{{ url('/media/' . config('settings.app_logo')) }}" alt="logo.png" width="150">
+            <img src="{{ asset('storage/' . config('settings.app_logo')) }}" alt="logo.png" width="150">
         </a>
     </div>
 

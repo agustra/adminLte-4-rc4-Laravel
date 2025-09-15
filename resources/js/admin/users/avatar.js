@@ -1,12 +1,12 @@
-// Avatar Component - Menangani fungsi avatar
-import { MediaLibrary } from "../../media/MediaLibrary.js";
+// Avatar Component - Menangani fungsi avatar dengan FileManager
 import { Delete } from "@components/helpers/delete.js";
+
 window.initializeAvatar = function () {
     const selectBtn = document.getElementById("selectAvatarBtn");
     if (selectBtn) {
         selectBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            openAvatarModal();
+            openFileManagerForAvatar();
         });
     }
 
@@ -14,118 +14,74 @@ window.initializeAvatar = function () {
     initializeDeleteAvatar();
 };
 
-async function openAvatarModal() {
-    try {
-        const response = await fetch("/media-library/modal", {
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector(
-                    'meta[name="csrf-token"]'
-                )?.content,
-                Accept: "application/json",
-            },
-        });
-
-        const modalContainer = document.createElement("div");
-        modalContainer.innerHTML = await response.text();
-        document.body.appendChild(modalContainer);
-
-        const modal = modalContainer.querySelector(".modal");
-        if (modal) {
-            const modalInstance = new bootstrap.Modal(modal);
-            modalInstance.show();
-
-            // Wait for modal to be fully shown before initializing MediaLibrary
-            modal.addEventListener("shown.bs.modal", function () {
-                if (typeof MediaLibrary !== "undefined") {
-                    new MediaLibrary();
-                }
-                setupAvatarSelection(modal, modalInstance);
-            });
-
-            modal.addEventListener("hidden.bs.modal", function () {
-                document.body.removeChild(modalContainer);
-            });
-        }
-    } catch (error) {
-        console.error("Error loading media modal:", error);
+function openFileManagerForAvatar() {
+    console.log('🖼️ Opening FileManager for avatar selection');
+    
+    // Store callback for avatar selection
+    window.currentAvatarSelection = true;
+    
+    // Open FileManager popup for user's private images
+    const popup = window.open(
+        '/user-filemanager?type=image',
+        'FileManager',
+        'width=1000,height=700,scrollbars=yes,resizable=yes'
+    );
+    
+    console.log('📂 FileManager popup opened for avatar:', popup);
+    
+    // Check if popup opened successfully
+    if (!popup || popup.closed) {
+        console.error('❌ Failed to open FileManager popup');
         if (typeof toastr !== "undefined") {
-            toastr.error("Gagal memuat media library");
+            toastr.error('Failed to open FileManager. Please check popup blocker.');
         }
+        return;
     }
-}
-
-function setupAvatarSelection(modal, modalInstance) {
-    const selectBtn = modal.querySelector("#selectMediaForSettings");
-    let selectedMedia = null;
-
-    function attachMediaItemListeners() {
-        const mediaItems = modal.querySelectorAll(
-            ".media-item:not(.folder-item)"
-        );
-
-        mediaItems.forEach(function (item) {
-            if (!item.hasAttribute("data-avatar-listener")) {
-                item.setAttribute("data-avatar-listener", "true");
-                item.addEventListener("click", function (e) {
-                    if (
-                        e.target.closest("button") ||
-                        e.target.type === "checkbox"
-                    )
-                        return;
-
-                    mediaItems.forEach(function (i) {
-                        i.classList.remove("selected");
-                    });
-                    item.classList.add("selected");
-
-                    selectedMedia = {
-                        id: item.dataset.id,
-                        url: item.dataset.url || item.querySelector("img")?.src,
-                        name:
-                            item.dataset.name || item.querySelector("img")?.alt,
-                    };
-
-                    if (selectBtn) selectBtn.disabled = false;
-                });
+    
+    // Listen for file selection from FileManager
+    window.SetUrl = function(urls, file_path) {
+        console.log('📁 FileManager avatar callback received:', { urls, file_path });
+        
+        if (!window.currentAvatarSelection) return;
+        
+        // Handle FileManager object format
+        const fileObj = Array.isArray(urls) ? urls[0] : urls;
+        const url = fileObj?.url || fileObj;
+        console.log('🔗 Avatar URL extracted:', url);
+        
+        if (url) {
+            updateAvatar({ url, name: fileObj?.name || 'avatar' });
+            
+            // Close popup
+            popup.close();
+            
+            // Clear selection flag
+            delete window.currentAvatarSelection;
+            
+            if (typeof toastr !== "undefined") {
+                toastr.success('Avatar berhasil dipilih dari FileManager');
             }
-        });
-    }
-
-    // Attach listeners to existing items
-    setTimeout(attachMediaItemListeners, 1000);
-
-    // Observer for new items
-    const observer = new MutationObserver(attachMediaItemListeners);
-    const mediaGrid = modal.querySelector("#mediaGrid");
-    if (mediaGrid) {
-        observer.observe(mediaGrid, { childList: true, subtree: true });
-    }
-
-    if (selectBtn) {
-        selectBtn.addEventListener("click", function () {
-            if (selectedMedia) {
-                updateAvatar(selectedMedia);
-                modalInstance.hide();
-            }
-        });
-    }
+        } else {
+            console.error('❌ No URL received from FileManager');
+        }
+    };
 }
 
 function updateAvatar(selectedMedia) {
+    console.log('🖼️ Updating avatar with:', selectedMedia);
+    
     const avatarInput = document.getElementById("avatarInput");
     const avatarPreview = document.getElementById("avatarPreview");
 
     if (selectedMedia && selectedMedia.url) {
         if (avatarInput) {
             avatarInput.value = selectedMedia.url;
+            console.log('✅ Avatar input updated:', selectedMedia.url);
         }
 
         if (avatarPreview) {
             avatarPreview.src = selectedMedia.url;
-        }
-
-        if (typeof toastr !== "undefined") {
-            toastr.success("Avatar berhasil dipilih dari Media Library");
+            console.log('✅ Avatar preview updated');
         }
     }
 }
@@ -158,7 +114,7 @@ function initializeDeleteAvatar() {
         onDeleteSuccess: function (userId, response) {
             const avatarPreview = document.getElementById("avatarPreview");
             if (avatarPreview) {
-                avatarPreview.src = "/avatar/avatar-default.jpg";
+                avatarPreview.src = "/storage/filemanager/images/public/avatar-default.webp";
             }
 
             const avatarInput = document.getElementById("avatarInput");

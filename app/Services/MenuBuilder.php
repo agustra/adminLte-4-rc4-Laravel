@@ -72,7 +72,7 @@ class MenuBuilder
             // Parent menu with children
             $html .= '<a href="#" class="nav-link'.($isActive ? ' active' : '').'">';
             $html .= '<i class="nav-icon '.($menu->icon ?: 'bi bi-folder').'"></i>';
-            $html .= '<p class="d-flex justify-content-between align-items-center w-100">';
+            $html .= '<p class="d-flex justify-content-between align-items-center w-100">'; 
             $html .= '<span>'.$menu->name.'</span>';
 
             // Dynamic badge berdasarkan perubahan data hari ini
@@ -100,7 +100,7 @@ class MenuBuilder
             }
 
             $html .= '<a href="'.url($menu->url).'" class="nav-link'.$activeClass.'">';
-            $html .= '<i class="nav-icon '.($menu->parent_id ? 'bi bi-circle' : ($menu->icon ?: 'bi bi-link')).'"></i>';
+            $html .= '<i class="nav-icon '.($menu->icon ?: 'bi bi-circle').'"></i>';
             $html .= '<p class="d-flex justify-content-between align-items-center w-100">';
             $html .= '<span>'.$menu->name.'</span>';
 

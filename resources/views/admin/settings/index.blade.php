@@ -3,7 +3,6 @@
 @section('title', 'settings')
 
 @section('css')
-    @include('media.partials.styles')
     <style>
         /* Scoped CSS untuk settings page saja */
         #settingsForm .spin {
@@ -82,13 +81,13 @@
                                                 <input type="text" class="form-control" id="app_logo" name="app_logo"
                                                     value="{{ config('settings.app_logo') }}" readonly>
                                                 <button type="button" class="btn btn-outline-secondary"
-                                                    onclick="openMediaPicker('app_logo')">
-                                                    <i class="bi bi-image"></i> Choose
+                                                    onclick="openFileManager('app_logo')">
+                                                    <i class="bi bi-image"></i> Choose Logo
                                                 </button>
                                             </div>
                                             <div id="app_logo_preview" class="mt-2">
                                                 @if (config('settings.app_logo'))
-                                                    <img src="{{ url('/media/' . config('settings.app_logo')) }}"
+                                                    <img src="{{ asset('storage/' . config('settings.app_logo')) }}"
                                                         alt="App Logo" class="img-thumbnail" style="max-height: 100px;">
                                                 @endif
                                             </div>
@@ -158,5 +157,4 @@
 
 @endsection
 
-@section('js')
-@endsection
+

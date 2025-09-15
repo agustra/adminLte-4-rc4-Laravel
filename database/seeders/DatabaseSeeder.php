@@ -26,8 +26,10 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             MenuSeeder::class,
             MenuBadgeConfigSeeder::class,
-            MediaSeeder::class,
             ControllerPermissionSeeder::class,
+            FileManagerSeeder::class, // Restore essential files
+            
+            // FileManagerPicsumSeeder::class, // Uncomment for real images from Picsum Photos
 
             PassportClientSeeder::class,
         ]);

@@ -89,21 +89,45 @@ class UsersApiController extends Controller
 
     private function extractRelativePath($avatarUrl): ?string
     {
-        if (! str_contains((string) $avatarUrl, '/media/')) {
+        if (empty($avatarUrl)) {
             return null;
         }
-
-        // Extract relative path from full URL
-        $relativePath = str_replace(url('/'), '', $avatarUrl);
-        $relativePath = ltrim($relativePath, '/');
-
-        // Validate path to prevent directory traversal
-        if (str_contains($relativePath, '..') || ! preg_match('/^media\//', $relativePath)) {
-            return null;
+        
+        // If it's a full URL, extract the path part
+        if (filter_var($avatarUrl, FILTER_VALIDATE_URL)) {
+            $path = parse_url($avatarUrl, PHP_URL_PATH);
+            $path = ltrim($path, '/');
+        } else {
+            $path = ltrim($avatarUrl, '/');
         }
-
-        // Remove 'media/' prefix to store relative path
-        return str_replace('media/', '', $relativePath);
+        
+        // Remove 'storage/' prefix if present (since we'll add it in view)
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, 8);
+        }
+        
+        // Remove 'media/' prefix if present (legacy)
+        if (str_starts_with($path, 'media/')) {
+            $path = substr($path, 6);
+        }
+        
+        // Ensure path starts with filemanager/ for user avatars
+        if (!str_starts_with($path, 'filemanager/') && !str_starts_with($path, 'avatars/')) {
+            // If it's just a filename, assume it's in user's private folder
+            if (!str_contains($path, '/')) {
+                $userId = auth()->id();
+                $userFolderName = $this->getUserFolderName(auth()->user());
+                $path = "filemanager/images/{$userFolderName}/{$path}";
+            }
+        }
+        
+        return $path;
+    }
+    
+    private function getUserFolderName($user): string
+    {
+        $folderName = strtolower(str_replace(' ', '-', $user->name));
+        return preg_replace('/[^a-z0-9\-]/', '', $folderName);
     }
 
     public function index(Request $request)
@@ -214,8 +238,12 @@ class UsersApiController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'avatar_url' => $user->profile_photo_path
-                        ? url('/media/' . $user->profile_photo_path)
-                        : url('/media/avatars/avatar-default.webp'),
+                        ? (str_starts_with($user->profile_photo_path, 'http')
+                            ? $user->profile_photo_path
+                            : (str_starts_with($user->profile_photo_path, '/storage/')
+                                ? url($user->profile_photo_path)
+                                : asset('storage/' . $user->profile_photo_path)))
+                        : asset('storage/filemanager/images/public/avatar-default.webp'),
                     'roles' => array_map(fn($role) => ['name' => trim($role)], $roles),
                     'permissions' => array_map(fn($perm) => ['name' => trim($perm)], array_filter($permissions)),
                     'permissions_count' => (int) $user->permissions_count,

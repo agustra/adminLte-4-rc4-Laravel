@@ -1,5 +1,5 @@
 @php
-    $imageSrc = $user->avatar_url ?? asset('avatar/avatar-default.jpg');
+    $imageSrc = $user->avatar_url ?? asset('storage/filemanager/images/public/avatar-default.webp');
 @endphp
 
 <div class="modal-content">
@@ -140,7 +140,7 @@
 
                     <!-- Hidden input for avatar URL -->
                     <input type="hidden" name="avatar" id="avatarInput"
-                        value="{{ old('avatar', $user->profile_photo_path && !str_starts_with($user->profile_photo_path, '/avatar/') ? url('/media/' . $user->profile_photo_path) : '') }}">
+                        value="{{ old('avatar', $user->profile_photo_path && !str_starts_with($user->profile_photo_path, 'avatars/') ? asset('storage/' . $user->profile_photo_path) : '') }}">
                 </div>
 
 

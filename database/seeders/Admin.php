@@ -15,6 +15,7 @@ class Admin extends Seeder
         $this->createPermissions();
         $this->createRoles();
         $this->assignRolePermissions();
+        $this->ensureDefaultAvatar();
         $this->createUsers();
     }
 
@@ -28,10 +29,11 @@ class Admin extends Seeder
             'settings',
             'menus',
             'badge',
-            'media',
+
             'backup',
             'controller-permissions',
-            'badge-configs'
+            'badge-configs',
+            'filemanager'
         ];
 
         $actions = ['menu', 'read', 'create', 'edit', 'show', 'delete'];
@@ -74,14 +76,80 @@ class Admin extends Seeder
     {
         $rolePermissions = [
             'Super Admin' => Permission::all()->pluck('name')->toArray(),
-            'Admin' => ['menu dashboard', 'read dashboard', 'menu users', 'read users', 'create users', 'edit users', 'show users', 'delete users'],
-            'Manager' => ['menu dashboard', 'read dashboard', 'menu users', 'read users', 'show users'],
-            'Editor' => ['menu dashboard', 'read dashboard', 'read users', 'edit users'],
-            'Author' => ['menu dashboard', 'read dashboard', 'read users'],
-            'Moderator' => ['read dashboard', 'read users'],
-            'User' => ['read dashboard'],
+            'Admin' => [
+                'menu dashboard',
+                'read dashboard',
+                'menu users',
+                'read users',
+                'create users',
+                'edit users',
+                'show users',
+                'delete users',
+                'menu filemanager',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
+            'Manager' => [
+                'menu dashboard',
+                'read dashboard',
+                'menu users',
+                'read users',
+                'show users',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
+            'Editor' => [
+                'menu dashboard',
+                'read dashboard',
+                'read users',
+                'edit users',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
+            'Author' => [
+                'menu dashboard',
+                'read dashboard',
+                'read users',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
+            'Moderator' => [
+                'menu dashboard',
+                'read dashboard',
+                'read users',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
+            'User' => [
+                'menu dashboard',
+                'read dashboard',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
             'Visitor' => ['read dashboard'],
-            'Auditor' => ['read dashboard', 'read users', 'read roles', 'read permissions'],
+            'Auditor' => [
+                'menu dashboard',
+                'read dashboard',
+                'read users',
+                'read roles',
+                'read permissions',
+                'read filemanager',
+                'create filemanager',
+                'edit filemanager',
+                'delete filemanager'
+            ],
             'Guest' => []
         ];
 
@@ -120,7 +188,7 @@ class Admin extends Seeder
                 [
                     'name' => $userData['name'],
                     'email_verified_at' => now(),
-                    'profile_photo_path' => 'avatars/avatar-default.webp',
+                    'profile_photo_path' => 'filemanager/images/public/avatar-default.webp',
                     'password' => Hash::make('password'),
                 ]
             );
@@ -129,18 +197,40 @@ class Admin extends Seeder
         }
 
         // Generate 300 visitor users
-        for ($i = 1; $i <= 300; $i++) {
-            $user = User::updateOrCreate(
-                ['email' => "visitor{$i}@mail.com"],
-                [
-                    'name' => "Visitor {$i}",
-                    'email_verified_at' => now(),
-                    'profile_photo_path' => 'avatars/avatar-default.webp',
-                    'password' => Hash::make('password'),
-                ]
-            );
+        // for ($i = 1; $i <= 300; $i++) {
+        //     $user = User::updateOrCreate(
+        //         ['email' => "visitor{$i}@mail.com"],
+        //         [
+        //             'name' => "Visitor {$i}",
+        //             'email_verified_at' => now(),
+        //             'profile_photo_path' => 'avatars/avatar-default.webp',
+        //             'password' => Hash::make('password'),
+        //         ]
+        //     );
 
-            $user->syncRoles(['Visitor']);
+        //     $user->syncRoles(['Visitor']);
+        // }
+    }
+
+    private function ensureDefaultAvatar(): void
+    {
+        $sourcePath = public_path('img/avatars/avatar-default.webp');
+        $targetDir = storage_path('app/public/filemanager/images/public');
+        $targetPath = $targetDir . '/avatar-default.webp';
+
+        // Create directory if not exists
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        // Copy default avatar if source exists and target doesn't exist
+        if (file_exists($sourcePath) && !file_exists($targetPath)) {
+            copy($sourcePath, $targetPath);
+            $this->command->info('✅ Default avatar copied to FileManager public folder');
+        } elseif (file_exists($targetPath)) {
+            $this->command->info('ℹ️ Default avatar already exists in FileManager');
+        } else {
+            $this->command->warn('⚠️ Source avatar not found: ' . $sourcePath);
         }
     }
 }

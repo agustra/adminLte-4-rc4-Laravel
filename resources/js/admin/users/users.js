@@ -88,9 +88,7 @@ let currentFilters = { ...DEFAULT_FILTERS };
 // ============================
 
 const getApiParams = () => {
-    if (!hasCustomFilter) {
-        return generalConfig.showAllDataOnLoad ? {} : { date: TODAY_STRING };
-    }
+    if (!hasCustomFilter) return {}; // ✅ Tidak kirim filter, tampilkan semua data
 
     return Object.fromEntries(
         Object.entries(currentFilters).filter(([_, v]) => v !== null)
@@ -167,17 +165,7 @@ function createTableConfig() {
                 orderable: false,
                 searchable: false,
             },
-            {
-                data: "avatar_url",
-                title: "Avatar",
-                orderable: false,
-                searchable: false,
-                render: (_, __, row) => {
-                    const avatarUrl =
-                        row.avatar_url || "/avatar/avatar-default.jpg";
-                    return `<img src="${avatarUrl}" alt="Avatar" width="40" height="40" style="border-radius: 50%;">`;
-                },
-            },
+
             { data: "name", title: "Name", orderable: true },
             { data: "email", title: "Email", orderable: true },
             {
@@ -234,7 +222,7 @@ function createTableConfig() {
         // Features
         pageLength: generalConfig.pageLength,
         lengthMenu: generalConfig.lengthMenu,
-        order: generalConfig.defaultOrder,
+        order: [[0, "desc"]],
         ordering: true,
         searching: true,
         columnSearch: true,

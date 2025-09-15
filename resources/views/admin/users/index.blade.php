@@ -1,16 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'users')
+@section('title', 'users') <!-- users disini berhubungan dengan cara js diload -->
 
 @section('css')
     <!-- Option 2: Standalone (Zero Dependencies) -->
-    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.5/modern-table.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.5/responsive.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.6/modern-table.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.6/responsive.css" rel="stylesheet">
 
     <!-- Cropper CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-
-    @include('media.partials.styles')
 @endsection
 
 @section('content')
@@ -31,13 +28,68 @@
     @include('components.modal.Modal')
 @endsection
 
-@section('js')
-
-
+{{-- @section('js')
+    <!-- JavaScript -->
     <script>
-        // Inject permissions ke JavaScript
-        window.meta = window.meta || {};
-        window.meta.permissions = @json($controllerPermissions ?? []);
+        console.log(localStorage.getItem('token'));
     </script>
+    <script type="module">
+        import {
+            ModernTable
+        } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.6/core/ModernTable.js";
+        // Inject permissions ke JavaScript
+        const table = new ModernTable('#table-users', {
+            // Data source (with auth and callbacks)
 
-@endsection
+            urlApi: {
+                url: '/api/users',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                beforeSend: function(params) {
+                    console.log('test', params);
+
+                    // Show loading, modify params, etc.
+                },
+                success: function(data, status, response) {
+                    console.log('response', response);
+
+                    // Handle successful response
+                },
+                error: function(error, status, message) {
+                    // Handle errors
+                },
+                complete: function() {
+                    // Always runs (cleanup, hide loading, etc.)
+                }
+            },
+            columns: [{
+                    data: 'name',
+                    title: 'Name'
+                },
+                {
+                    data: 'email',
+                    title: 'Email'
+                },
+            ],
+            // Features
+            paging: true,
+            pageLength: 10,
+            searching: true,
+            columnSearch: false, // Individual column search
+            ordering: false,
+            select: true,
+            responsive: true,
+
+            // UI
+            theme: 'auto', // 'light', 'dark', 'auto'
+            buttons: ['copy', 'csv', 'excel', 'pdf'],
+
+            // Advanced
+            stateSave: true,
+            keyboard: true,
+            accessibility: true
+        });
+    </script>
+@endsection --}}
