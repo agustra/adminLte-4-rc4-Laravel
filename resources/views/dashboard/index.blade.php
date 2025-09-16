@@ -3,6 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('css')
+
+    <!-- ModernTable CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/modern-table.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/responsive.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/themes.css" rel="stylesheet">
     <style>
         .stats-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -382,7 +387,373 @@
             </div>
         </div>
     </div>
+
+    <!-- Modern Table Demo with External API -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-shopping-cart text-primary me-2"></i>Modern Table Demo - External API
+            </h5>
+            <div class="card-tools">
+                <span class="badge bg-info">DummyJSON API</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="loading">Loding</div>
+            <table id="table-users" class="table table-striped table-hover"></table>
+        </div>
+    </div>
 @endsection
 
 @section('js')
+
+    <!-- Modern Table Demo with DummyJSON API -->
+    <script type="module">
+        import {
+            ModernTable
+        } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/core/ModernTable.js";
+
+        // Setup event listeners BEFORE table initialization
+        const table = new ModernTable('#table-users', {
+            api: {
+                url: '/api/users',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+
+                // Before request is sent (like beforeSend)
+                beforeSend: function(params) {
+                    document.getElementById('loading').style.display = 'block';
+                    // Return false to abort request
+                },
+
+                // On successful response (like success)
+                success: function(data, textStatus, response) {
+                    console.log('Request successful:', data);
+                },
+
+                // On error (like error)
+                error: function(error, textStatus, errorThrown) {
+                    console.error('Request failed:', error);
+                    alert('Failed to load data');
+                    // Return fallback data to prevent table error
+                    return {
+                        data: [],
+                        recordsTotal: 0,
+                        recordsFiltered: 0
+                    };
+                },
+
+                // Always runs (like complete)
+                complete: function() {
+                    document.getElementById('loading').style.display = 'none';
+                    console.log('Request completed');
+                },
+
+                // Legacy support
+                beforeRequest: function(config) {
+                    // Modify request config
+                    return config;
+                }
+            },
+            columns: [{
+                    data: "DT_RowIndex",
+                    title: "No",
+                    orderable: false,
+                    searchable: false,
+                },
+                {
+                    data: 'avatar_url',
+                    title: 'Avatar',
+                    render: (data) =>
+                        `<img src="${data}" alt="Avatar" class="rounded-circle" width="40" height="40">`
+                },
+                {
+                    data: 'name',
+                    title: 'Name'
+                },
+                {
+                    data: 'email',
+                    title: 'Email'
+                },
+                {
+                    data: "actions",
+                    title: "Action",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false,
+                    render: (_, __, row) => `
+                        <button class="btn btn-sm btn-primary me-1" onclick="editUser(${row.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${row.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `
+                },
+            ],
+            buttons: [
+
+                {
+                    text: 'Create',
+                    className: "btn btn-primary btn-sm btn-create",
+                    enabled: false,
+                    attr: {
+                        id: 'btn-create',
+                    },
+                    action: function(e, dt, node, config) {
+                        alert('Create New Data');
+                    }
+                },
+                {
+                    text: 'Delete Bulk (<span class="selected-count">0</span>)',
+                    className: "btn btn-danger btn-sm btn-delete",
+                    enabled: false,
+                    attr: {
+                        id: 'btn-bulk-delete',
+                        style: "display: block;",
+                    },
+                    action: function(e, dt, node, config) {
+                        const selectedRows = dt.getSelectedRows();
+                        if (selectedRows.length > 0) {
+                            alert(`Bulk delete ${selectedRows.length} selected users`);
+                        } else {
+                            alert('No users selected for deletion');
+                        }
+                    }
+                },
+                'copy', 'csv', 'excel',
+                {
+                    extend: "pdf",
+                    text: "PDF",
+                    className: "btn btn-danger btn-sm btn-pdf",
+                    filename: 'Users',
+                    orientation: "landscape",
+                    pageSize: "A4",
+                    exportColumns: ['avatar_url', 'name', 'email'],
+                    titleAttr: "Export data as PDF file",
+                },
+                {
+                    extend: "print",
+                    text: "Print",
+                    className: "btn btn-warning btn-sm btn-print",
+                    orientation: "portrait",
+                    exportColumns: ['avatar_url', 'name', 'email'],
+                    titleAttr: "Print selected columns with custom styling",
+                },
+                "colvis"
+            ],
+
+            serverSide: true,
+
+            // Features
+            pageLength: 10,
+            lengthMenu: [5, 10, 25, 50],
+            order: [
+                [2, "desc"]
+            ], // name column
+            ordering: true,
+            searching: true,
+            columnSearch: true,
+            paging: true,
+            select: true,
+            responsive: true,
+
+            // UX
+            theme: "auto",
+            keyboard: true,
+            accessibility: true,
+
+            // State
+            stateSave: true,
+            stateDuration: 3600,
+
+            filters: [{
+                    column: 'date',
+                    type: 'date',
+                    label: 'Registration Date',
+                    placeholder: 'Select date'
+                },
+                {
+                    column: 'start_date',
+                    type: 'date',
+                    label: 'From Date',
+                    placeholder: 'Start date'
+                },
+                {
+                    column: 'end_date',
+                    type: 'date',
+                    label: 'To Date',
+                    placeholder: 'End date'
+                },
+                {
+                    column: 'year',
+                    type: 'select',
+                    label: 'Year',
+                    options: [{
+                            value: '',
+                            text: 'All Years'
+                        },
+                        {
+                            value: '2024',
+                            text: '2024'
+                        },
+                        {
+                            value: '2023',
+                            text: '2023'
+                        },
+                        {
+                            value: '2022',
+                            text: '2022'
+                        }
+                    ]
+                },
+                {
+                    type: 'clear',
+                    label: 'Clear',
+                    className: 'btn btn-outline-secondary btn-sm'
+                }
+            ],
+
+            // Called after table initialization
+            initComplete: function(data, meta) {
+                console.log('Table initialized with:', data.length, 'rows');
+            },
+
+            // Called BEFORE every table draw/redraw
+            preDrawCallback: function(settings) {
+                console.log('About to render:', settings.data.length, 'rows');
+                // Show loading, validate data, preprocessing
+                // Return false to cancel rendering
+                return true;
+            },
+
+            // Called after every table draw/redraw
+            drawCallback: function(settings) {
+                console.log('Table drawn with:', settings.data.length, 'rows');
+                // Re-bind events, apply styling, initialize tooltips, etc.
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                    new bootstrap.Tooltip(el);
+                });
+            },
+
+            // Called when row DOM element is created
+            createdRow: function(row, data, dataIndex) {
+                // Add data attributes, CSS classes, event listeners
+                row.setAttribute('data-user-id', data.id);
+                if (data.role === 'admin') {
+                    row.classList.add('admin-row');
+                }
+            },
+
+            // Called for each row during rendering
+            rowCallback: function(row, data, index) {
+                // Apply conditional styling, modify row content
+                if (data.status === 'inactive') {
+                    row.classList.add('table-warning');
+                }
+            },
+
+            // Called to manipulate header after each draw
+            headerCallback: function(thead, data, start, end, display) {
+                // Update header with dynamic info
+                const nameHeader = thead.querySelector('th[data-column="1"]');
+                if (nameHeader) {
+                    const activeCount = data.filter(user => user.status === 'active').length;
+                    nameHeader.title = `${activeCount} active users in current page`;
+                }
+            },
+
+            // Called to manipulate footer after each draw
+            footerCallback: function(row, data, start, end, display) {
+                if (row) {
+                    const total = data.length;
+                    const active = data.filter(item => item.status === 'active').length;
+                    row.innerHTML = `
+                <tr>
+                    <th colspan="3">Summary:</th>
+                    <th>Active: ${active}</th>
+                    <th>Total: ${total}</th>
+                    <th colspan="2"></th>
+                </tr>
+            `;
+                }
+            },
+
+            // Called to generate custom info text
+            infoCallback: function(settings, start, end, max, total, pre) {
+                const percentage = total > 0 ? Math.round((total / max) * 100) : 0;
+                return `
+            <div class="d-flex justify-content-between">
+                <span>Menampilkan ${start} sampai ${end} dari ${total} data</span>
+                <span class="badge bg-info">${percentage}% data ditampilkan</span>
+            </div>
+        `;
+            },
+
+            // Custom state loading (override built-in)
+            // stateLoadCallback: function(settings) {
+            //     const state = JSON.parse(localStorage.getItem('customTableState'));
+            //     if (state) {
+            //         // Example: Always reset page to 1 (exclude paging from state)
+            //         state.page = 1;
+            //         return state;
+            //     }
+            //     return null;
+            // },
+
+            // Custom state saving (override built-in)
+            stateSaveCallback: function(settings, data) {
+                // Add custom metadata
+                const enhancedState = {
+                    ...data,
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent
+                };
+                localStorage.setItem('customTableState', JSON.stringify(enhancedState));
+            },
+
+            // Row click handler
+            onRowClick: function(rowData, index, event) {
+                console.log('Row clicked:', rowData);
+            },
+
+            // Selection change handler
+            onSelectionChange: function(selectedRows) {
+                console.log('Selection changed:', selectedRows.length, 'rows');
+            },
+
+            // Error handler
+            onError: function(error) {
+                console.error('Table error:', error);
+            }
+        });
+
+
+
+        // Events - Setup AFTER table creation but BEFORE any data loading
+        table.on('initComplete', function(data, meta) {
+            console.log('🎉 initComplete event fired:', data);
+        });
+
+        table.on('selectionChange', function(selectedRows) {
+            console.log('🔄 selectionChange event fired:', selectedRows);
+        });
+
+        table.on('error', function(error) {
+            console.log('❌ error event fired:', error);
+        });
+
+        // Action handlers
+        window.editUser = function(id) {
+            alert(`Edit user with ID: ${id}`);
+        };
+
+        window.deleteUser = function(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                alert(`Delete user with ID: ${id}`);
+            }
+        };
+    </script>
 @endsection

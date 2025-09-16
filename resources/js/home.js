@@ -1,4 +1,4 @@
-import { ModernTable } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.6/core/ModernTable.js";
+import { ModernTable } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/core/ModernTable.js";
 import { ActionButton } from "@components/tables/ActionButton.js";
 import {
     formatPermissionsColumn,
@@ -218,6 +218,7 @@ function createTableConfig() {
         ],
 
         // Table Features
+        serverSide: true,
         pageLength: 10,
         lengthMenu: [5, 10, 25, 50],
         ordering: true,

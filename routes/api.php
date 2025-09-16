@@ -18,6 +18,9 @@ Route::middleware('auth:api')->group(function () {
 // Include file routes admin
 require __DIR__.'/api.admin.php';
 
+// Demo endpoints for Modern Table
+Route::get('/demo-users', [\App\Http\Controllers\Api\DemoController::class, 'users']);
+
 // Include FileManager API routes
 // Contains: Admin FileManager, User FileManager, System Files, User Monitoring APIs
 // Endpoints: /api/filemanager/*, /api/filemanager/my-files/*, /api/filemanager/system/*, /api/filemanager/monitoring/*

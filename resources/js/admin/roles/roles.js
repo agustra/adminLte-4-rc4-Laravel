@@ -1,4 +1,4 @@
-import { ModernTable } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.6/core/ModernTable.js";
+import { ModernTable } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/core/ModernTable.js";
 import { Delete } from "@helpers/delete.js";
 import { createBulkDeleteHandler } from "@helpers/bulkDelete.js";
 import { createSelectionChangeHandler } from "@tables/handleSelectionChange.js";
@@ -190,6 +190,7 @@ function createTableConfig() {
         }),
 
         // Features
+        serverSide: true,
         pageLength: 10,
         lengthMenu: [5, 10, 25, 50],
         order: [[0, "desc"]], // name column

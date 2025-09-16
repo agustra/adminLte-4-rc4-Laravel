@@ -1,4 +1,4 @@
-import { ModernTable } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.6/core/ModernTable.js";
+import { ModernTable } from "https://cdn.jsdelivr.net/npm/modern-table-js@1.0.9/core/ModernTable.js";
 import { Delete } from "@helpers/delete.js";
 import { createBulkDeleteHandler } from "@helpers/bulkDelete.js";
 import { createSelectionChangeHandler } from "@tables/handleSelectionChange.js";
@@ -256,6 +256,7 @@ function initializeTabTable(tab) {
                 : '<i class="fab fa-google-drive"></i> ☁️ Backup Google Drive',
             createHandler: () => createBackupForTab(tab),
         }),
+        serverSide: true,
         pageLength: generalConfig.pageLength,
         lengthMenu: generalConfig.lengthMenu,
         order: generalConfig.defaultOrder,

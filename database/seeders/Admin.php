@@ -197,19 +197,19 @@ class Admin extends Seeder
         }
 
         // Generate 300 visitor users
-        // for ($i = 1; $i <= 300; $i++) {
-        //     $user = User::updateOrCreate(
-        //         ['email' => "visitor{$i}@mail.com"],
-        //         [
-        //             'name' => "Visitor {$i}",
-        //             'email_verified_at' => now(),
-        //             'profile_photo_path' => 'avatars/avatar-default.webp',
-        //             'password' => Hash::make('password'),
-        //         ]
-        //     );
+        for ($i = 1; $i <= 300; $i++) {
+            $user = User::updateOrCreate(
+                ['email' => "visitor{$i}@mail.com"],
+                [
+                    'name' => "Visitor {$i}",
+                    'email_verified_at' => now(),
+                    'profile_photo_path' => 'avatars/avatar-default.webp',
+                    'password' => Hash::make('password'),
+                ]
+            );
 
-        //     $user->syncRoles(['Visitor']);
-        // }
+            $user->syncRoles(['Visitor']);
+        }
     }
 
     private function ensureDefaultAvatar(): void

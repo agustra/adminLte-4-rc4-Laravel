@@ -22,7 +22,7 @@ if (shouldSave && currentPath !== "/") {
     localStorage.setItem("lastVisited", currentPath);
     console.log("✅ Saved lastVisited:", currentPath);
 } else {
-    console.log("❌ Not saving path:", currentPath, "(excluded or root)");
+    // console.log("❌ Not saving path:", currentPath, "(excluded or root)");
 }
 
 // Helper function untuk redirect setelah login

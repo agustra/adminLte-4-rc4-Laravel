@@ -14,6 +14,7 @@ use App\Traits\HasQueryBuilder;
 use App\Traits\ModernTableHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -92,7 +93,7 @@ class UsersApiController extends Controller
         if (empty($avatarUrl)) {
             return null;
         }
-        
+
         // If it's a full URL, extract the path part
         if (filter_var($avatarUrl, FILTER_VALIDATE_URL)) {
             $path = parse_url($avatarUrl, PHP_URL_PATH);
@@ -100,30 +101,30 @@ class UsersApiController extends Controller
         } else {
             $path = ltrim($avatarUrl, '/');
         }
-        
+
         // Remove 'storage/' prefix if present (since we'll add it in view)
         if (str_starts_with($path, 'storage/')) {
             $path = substr($path, 8);
         }
-        
+
         // Remove 'media/' prefix if present (legacy)
         if (str_starts_with($path, 'media/')) {
             $path = substr($path, 6);
         }
-        
+
         // Ensure path starts with filemanager/ for user avatars
         if (!str_starts_with($path, 'filemanager/') && !str_starts_with($path, 'avatars/')) {
             // If it's just a filename, assume it's in user's private folder
             if (!str_contains($path, '/')) {
-                $userId = auth()->id();
-                $userFolderName = $this->getUserFolderName(auth()->user());
+                $userId = Auth::user()->id;
+                $userFolderName = $this->getUserFolderName(Auth::user());
                 $path = "filemanager/images/{$userFolderName}/{$path}";
             }
         }
-        
+
         return $path;
     }
-    
+
     private function getUserFolderName($user): string
     {
         $folderName = strtolower(str_replace(' ', '-', $user->name));
@@ -191,10 +192,14 @@ class UsersApiController extends Controller
             'filterable' => [
                 'date' => 'u.created_at',
                 'start_date' => function ($query, $value) {
-                    $query->whereDate('u.created_at', '>=', $value);
+                    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+                        $query->whereDate('u.created_at', '>=', $value);
+                    }
                 },
                 'end_date' => function ($query, $value) {
-                    $query->whereDate('u.created_at', '<=', $value);
+                    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+                        $query->whereDate('u.created_at', '<=', $value);
+                    }
                 },
                 'year' => 'u.created_at',
                 'month' => 'u.created_at',

@@ -239,8 +239,14 @@ trait ModernTableHelper
     {
         if (!isset($config['filterable'])) return;
 
+        // Get filters from request.filters (ModernTable format)
+        $filters = $request->input('filters', []);
+        
+
+
         foreach ($config['filterable'] as $filter => $column) {
-            $value = $request->input($filter);
+            // Try filters array first, then direct input (backward compatibility)
+            $value = $filters[$filter] ?? $request->input($filter);
             if (empty($value)) continue;
 
             if (is_callable($column)) {
